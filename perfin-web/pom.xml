@@ -4,16 +4,14 @@
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.perfin</groupId>
-    <artifactId>perfin</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <parent>
+        <artifactId>perfin</artifactId>
+        <groupId>com.github.perfin</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
-    <packaging>pom</packaging>
+    <artifactId>perfin-web</artifactId>
 
-    <modules>
-        <module>perfin-model</module>
-        <module>perfin-service</module>
-        <module>perfin-web</module>
-    </modules>
+    <packaging>war</packaging>
 
 </project>
