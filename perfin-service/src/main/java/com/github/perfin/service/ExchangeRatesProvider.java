@@ -1,4 +1,4 @@
-package cz.muni.fi.pv243.perfin.service;
+package com.github.perfin.service;
 
 import java.math.BigDecimal;
 import java.util.concurrent.Future;
@@ -13,7 +13,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
-import cz.muni.fi.pv243.perfin.service.util.ExchangeCurrency;
+import com.github.perfin.service.util.ExchangeCurrency;
 
 @Stateless
 public class ExchangeRatesProvider {

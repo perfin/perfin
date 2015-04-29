@@ -15,5 +15,21 @@
         <module>perfin-service</module>
         <module>perfin-web</module>
     </modules>
+    
+    <properties>
+    	<javaee7.web.spec.version>1.0.1.Final</javaee7.web.spec.version>
+    </properties>
+    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.jboss.spec</groupId>
+                <artifactId>jboss-javaee-web-7.0</artifactId>
+                <version>${javaee7.web.spec.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>

@@ -1,4 +1,4 @@
-package cz.muni.fi.pv243.perfin.service.test;
+package com.github.perfin.service.test;
 
 import static org.junit.Assert.*;
 
@@ -15,8 +15,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import cz.muni.fi.pv243.perfin.service.ExchangeRatesProvider;
-import cz.muni.fi.pv243.perfin.service.util.ExchangeCurrency;
+import com.github.perfin.service.ExchangeRatesProvider;
+import com.github.perfin.service.util.ExchangeCurrency;
 
 @RunWith(Arquillian.class)
 public class ExchangeRatesProviderTest {

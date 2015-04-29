@@ -1,4 +1,4 @@
-package cz.muni.fi.pv243.perfin.service.util;
+package com.github.perfin.service.util;
 
 public enum ExchangeCurrency {
 	Czk("CZK"), Eur("EUR"), Usd("USD");
