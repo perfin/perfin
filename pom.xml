@@ -23,6 +23,11 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-entitymanager</artifactId>
+                <version>4.3.10.Final</version>
+            </dependency>
+            <dependency>
                 <groupId>org.jboss.spec</groupId>
                 <artifactId>jboss-javaee-web-7.0</artifactId>
                 <version>${javaee7.web.spec.version}</version>

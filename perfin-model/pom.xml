@@ -12,4 +12,11 @@
 
     <artifactId>perfin-model</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>
