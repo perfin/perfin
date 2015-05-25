@@ -2,10 +2,7 @@ package com.github.perfin.model.entity;
 
 import com.github.perfin.model.type.AccountType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -16,16 +13,17 @@ public class User implements Serializable {
     @Column
     private Long id;
 
-    @Column
+    @Column(nullable = false, unique = true)
     private String userName;
 
-    @Column
+    @Column(nullable = false)
     private String hashedPassword;
 
-    @Column
+    @Enumerated(EnumType.ORDINAL)
+    @Column(nullable = false)
     private AccountType accountType;
 
-    @Column
+    @Column(nullable = false)
     private Currency defaultCurrency;
 
     public Long getId() {

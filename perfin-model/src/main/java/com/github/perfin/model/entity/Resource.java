@@ -15,19 +15,19 @@ public class Resource implements Serializable {
     @Column
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String name;
 
-    @Column
+    @Column(nullable = false)
     private Currency currency;
 
-    @Column
+    @Column(nullable = false)
     private BigDecimal initialBalance;
 
-    @Column
+    @Column(nullable = false)
     private BigDecimal currentBalance;
 
-    @Column
+    @Column(nullable = false)
     private User user;
 
     public Long getId() {

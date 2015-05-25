@@ -16,16 +16,16 @@ public class ExchangeRate implements Serializable {
     @Column
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private Currency from;
 
-    @Column
+    @Column(nullable = false)
     private Currency to;
 
-    @Column
+    @Column(nullable = false)
     private BigDecimal rate;
 
-    @Column
+    @Column(nullable = false)
     private LocalDate date;
 
     public Long getId() {

@@ -15,13 +15,13 @@ public class Transaction implements Serializable {
     @Column
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private Resource resource;
 
-    @Column
+    @Column(nullable = false)
     private Category category;
 
-    @Column
+    @Column(nullable = false)
     private BigDecimal amount;
 
     @Column
