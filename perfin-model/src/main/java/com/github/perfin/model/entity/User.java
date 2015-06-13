@@ -1,8 +1,9 @@
 package com.github.perfin.model.entity;
 
-import com.github.perfin.model.type.AccountType;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 @Entity
@@ -16,12 +17,9 @@ public class User implements Serializable {
     @Column(nullable = false, unique = true)
     private String userName;
 
-    @Column(nullable = false)
-    private String hashedPassword;
-
-    @Enumerated(EnumType.ORDINAL)
-    @Column(nullable = false)
-    private AccountType accountType;
+//    @Enumerated(EnumType.ORDINAL)
+//    @Column(nullable = false)
+//    private AccountType accountType;
 
     @Column(nullable = false)
     private Currency defaultCurrency;
@@ -42,21 +40,13 @@ public class User implements Serializable {
         this.userName = userName;
     }
 
-    public String getHashedPassword() {
-        return hashedPassword;
-    }
-
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
-    }
-
-    public AccountType getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(AccountType accountType) {
-        this.accountType = accountType;
-    }
+//    public AccountType getAccountType() {
+//        return accountType;
+//    }
+//
+//    public void setAccountType(AccountType accountType) {
+//        this.accountType = accountType;
+//    }
 
     public Currency getDefaultCurrency() {
         return defaultCurrency;

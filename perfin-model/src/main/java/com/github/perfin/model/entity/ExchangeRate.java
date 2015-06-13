@@ -17,13 +17,13 @@ public class ExchangeRate implements Serializable {
     private Long id;
 
     @Column(nullable = false)
-    private Currency from;
+    private Currency origin;
 
     @Column(nullable = false)
-    private Currency to;
+    private Currency target;
 
     @Column(nullable = false)
-    private BigDecimal rate;
+    private BigDecimal ratio;
 
     @Column(nullable = false)
     private LocalDate date;
@@ -36,28 +36,28 @@ public class ExchangeRate implements Serializable {
         this.id = id;
     }
 
-    public Currency getFrom() {
-        return from;
+    public Currency getOrigin() {
+        return origin;
     }
 
-    public void setFrom(Currency from) {
-        this.from = from;
+    public void setOrigin(Currency origin) {
+        this.origin = origin;
     }
 
-    public Currency getTo() {
-        return to;
+    public Currency getTarget() {
+        return target;
     }
 
-    public void setTo(Currency to) {
-        this.to = to;
+    public void setTarget(Currency target) {
+        this.target = target;
     }
 
-    public BigDecimal getRate() {
-        return rate;
+    public BigDecimal getRatio() {
+        return ratio;
     }
 
-    public void setRate(BigDecimal rate) {
-        this.rate = rate;
+    public void setRatio(BigDecimal ratio) {
+        this.ratio = ratio;
     }
 
     public LocalDate getDate() {
