@@ -4,9 +4,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+
+import org.hibernate.validator.constraints.Length;
+
 import java.io.Serializable;
 
 @Entity
+@NamedQuery(name="getAllCurrencies", query="SELECT * FROM Currency c")
 public class Currency implements Serializable {
 
     @Id
@@ -15,6 +20,7 @@ public class Currency implements Serializable {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    @Length(min=3, max=3, message="Currency Code must be of length: 3")
     private String code;
 
     @Column
