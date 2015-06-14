@@ -13,14 +13,12 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 
-import com.github.perfin.service.rest.util.ExchangeCurrency;
-
 @Stateless
 public class ExchangeRatesProvider {
 
 	@Asynchronous
-	public Future<BigDecimal> convertFromTo(ExchangeCurrency from, ExchangeCurrency to, BigDecimal value) {
-		return new AsyncResult<BigDecimal>(getRate(from.getLabel(), to.getLabel()).multiply(value));
+	public Future<BigDecimal> convertFromTo(String originalCode, String targetCode, BigDecimal value) {
+		return new AsyncResult<BigDecimal>(getRate(originalCode, targetCode).multiply(value));
 	}
 	
 	private BigDecimal getRate(String from, String to) {

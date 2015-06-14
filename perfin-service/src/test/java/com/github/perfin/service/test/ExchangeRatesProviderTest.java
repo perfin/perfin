@@ -17,7 +17,6 @@ import org.junit.runner.RunWith;
 
 import com.github.perfin.model.entity.Currency;
 import com.github.perfin.service.rest.ExchangeRatesProvider;
-import com.github.perfin.service.rest.util.ExchangeCurrency;
 
 @RunWith(Arquillian.class)
 public class ExchangeRatesProviderTest {
@@ -35,10 +34,10 @@ public class ExchangeRatesProviderTest {
     @Test
     public void testExchangeRates() throws InterruptedException, ExecutionException {
         BigDecimal result = null;
-        result = rates.convertFromTo(ExchangeCurrency.Usd, ExchangeCurrency.Eur, BigDecimal.ONE).get();
+        result = rates.convertFromTo("USD", "EUR", BigDecimal.ONE).get();
         assertTrue(BigDecimal.ONE.compareTo(result) > 0);
         
-        result =  rates.convertFromTo(ExchangeCurrency.Usd, ExchangeCurrency.Eur, BigDecimal.valueOf(100)).get();
+        result =  rates.convertFromTo("USD", "EUR", BigDecimal.valueOf(100)).get();
         assertTrue(BigDecimal.valueOf(85).compareTo(result) < 0);
     }
 }
