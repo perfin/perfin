@@ -15,8 +15,9 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.github.perfin.service.ExchangeRatesProvider;
-import com.github.perfin.service.util.ExchangeCurrency;
+import com.github.perfin.model.entity.Currency;
+import com.github.perfin.service.rest.ExchangeRatesProvider;
+import com.github.perfin.service.rest.util.ExchangeCurrency;
 
 @RunWith(Arquillian.class)
 public class ExchangeRatesProviderTest {
@@ -28,7 +29,7 @@ public class ExchangeRatesProviderTest {
     public static Archive<?> getDeployment() {
         return ShrinkWrap
                 .create(WebArchive.class)
-                .addPackages(true, ExchangeRatesProvider.class.getPackage());
+                .addPackages(true, ExchangeRatesProvider.class.getPackage(), Currency.class.getPackage());
     }
 
     @Test

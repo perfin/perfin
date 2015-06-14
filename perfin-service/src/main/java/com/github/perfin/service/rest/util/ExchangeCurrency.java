@@ -1,4 +1,4 @@
-package com.github.perfin.service.util;
+package com.github.perfin.service.rest.util;
 
 public enum ExchangeCurrency {
 	Czk("CZK"), Eur("EUR"), Usd("USD");

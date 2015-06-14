@@ -4,9 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+
 import java.io.Serializable;
 
 @Entity
+@NamedQuery(name="getUserCategories", query="select * from Category c where c.user.id = :userId")
 public class Category implements Serializable {
 
     @Id
