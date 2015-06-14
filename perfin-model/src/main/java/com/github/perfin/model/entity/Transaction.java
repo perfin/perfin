@@ -4,11 +4,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
+@NamedQueries(value={
+	@NamedQuery(name="getTransactionsByDateRange", query="SELECT * FROM Transaction t WHERE t.date >= :startDate AND t.date <= :endDate"),
+	@NamedQuery(name="getTransactionsByCategory", query="SELECT * FROM Transaction t WHERE t.category =  :category"),
+	@NamedQuery(name="getTransactionsByResource", query="SELECT * FROM Transaction t WHERE t.resource = :resource")
+})
 public class Transaction implements Serializable {
 
     @Id
