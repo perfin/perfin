@@ -80,6 +80,15 @@
             <version>${arquillian.version}</version>
             <scope>test</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <!-- use 3.0.0 for Java 8 projects -->
+            <version>3.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        
     </dependencies>
     
     <build>
@@ -172,6 +181,16 @@
                     <scope>test</scope>
                 </dependency>
             </dependencies>
+            <build>
+                <testResources>
+                    <testResource>
+                        <directory>src/test/resources</directory>
+                    </testResource>
+                    <testResource>
+                        <directory>src/test/resources-jbossas-managed</directory>
+                    </testResource>
+                </testResources>
+            </build>
         </profile>
 
     </profiles>

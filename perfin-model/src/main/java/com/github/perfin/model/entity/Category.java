@@ -9,7 +9,7 @@ import javax.persistence.NamedQuery;
 import java.io.Serializable;
 
 @Entity
-@NamedQuery(name="getUserCategories", query="select * from Category c where c.user.id = :userId")
+@NamedQuery(name="getUserCategories", query="select c from Category c where c.user.id = :userId")
 public class Category implements Serializable {
 
     @Id

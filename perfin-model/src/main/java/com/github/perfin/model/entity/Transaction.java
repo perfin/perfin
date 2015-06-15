@@ -13,9 +13,9 @@ import java.time.LocalDate;
 
 @Entity
 @NamedQueries(value={
-	@NamedQuery(name="getTransactionsByDateRange", query="SELECT * FROM Transaction t WHERE t.date >= :startDate AND t.date <= :endDate"),
-	@NamedQuery(name="getTransactionsByCategory", query="SELECT * FROM Transaction t WHERE t.category =  :category"),
-	@NamedQuery(name="getTransactionsByResource", query="SELECT * FROM Transaction t WHERE t.resource = :resource")
+	@NamedQuery(name="getTransactionsByDateRange", query="SELECT t FROM Transaction t WHERE t.date >= :startDate AND t.date <= :endDate"),
+	@NamedQuery(name="getTransactionsByCategory", query="SELECT t FROM Transaction t WHERE t.category =  :category"),
+	@NamedQuery(name="getTransactionsByResource", query="SELECT t FROM Transaction t WHERE t.resource = :resource")
 })
 public class Transaction implements Serializable {
 

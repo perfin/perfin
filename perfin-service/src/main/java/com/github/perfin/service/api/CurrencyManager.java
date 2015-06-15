@@ -15,7 +15,10 @@ public interface CurrencyManager {
      * @param code unique currency code
      * @param name long currency name (optional)
      * @return newly added currency record
-     * @throws IllegalArgumentException if code is empty or not unique
+     * @throws IllegalArgumentException if code doesn't conform one of these:
+     * 	- code length equal to 3
+     *  - code is uppercase
+     *  - code is unique															
      */
     Currency createCurrency(String code, String name);
 
