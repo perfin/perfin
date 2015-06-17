@@ -3,6 +3,7 @@ package com.github.perfin.service.impl;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -20,6 +21,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.github.perfin.model.entity.Category;
 import com.github.perfin.service.api.CategoryManager;
+import com.github.perfin.service.api.UserManager;
 import com.github.perfin.service.dto.PaginatedListWrapper;
 
 @Stateless
@@ -31,6 +33,9 @@ public class CategoryManagerImpl implements CategoryManager {
 
 	@PersistenceContext(unitName="primary")
 	private EntityManager em;
+	
+	@Inject
+	private UserManager userManager;
 		
 	public Category createCategory(Category category) {
 		em.persist(category);
@@ -59,7 +64,10 @@ public class CategoryManagerImpl implements CategoryManager {
     }
 
 	@Override
-	public List<Category> getUserCategories(Integer userId) {
+	public List<Category> getUserCategories() {
+		
+		Long userId = userManager.getCurrentUser().getId();
+		
 		Query query = em.createNamedQuery("getUserCategories");
 		query.setParameter("userId", userId);
 		
@@ -79,7 +87,6 @@ public class CategoryManagerImpl implements CategoryManager {
 	@Override
 	@GET
     public PaginatedListWrapper<Category> getCategories (
-    		@QueryParam("userId") Integer userId,
             @DefaultValue("1") @QueryParam("page") Integer page,
             @DefaultValue("id") @QueryParam("sortFields") String sortFields,
             @DefaultValue("asc") @QueryParam("sortDirections") String sortDirections) {
@@ -88,10 +95,12 @@ public class CategoryManagerImpl implements CategoryManager {
         paginatedListWrapper.setSortFields(sortFields);
         paginatedListWrapper.setSortDirections(sortDirections);
         paginatedListWrapper.setPageSize(5);
-        return findCategories(userId, paginatedListWrapper);
+        
+        return findCategories(paginatedListWrapper);
     }
 	
-	private PaginatedListWrapper<Category> findCategories(Integer userId, PaginatedListWrapper<Category> wrapper) {
+	private PaginatedListWrapper<Category> findCategories(PaginatedListWrapper<Category> wrapper) {
+		Long userId = userManager.getCurrentUser().getId();
         wrapper.setTotalResults(countCategories(userId));
         int start = (wrapper.getCurrentPage() - 1) * wrapper.getPageSize();
         wrapper.setList(findCategories(userId, start, wrapper.getPageSize(), wrapper.getSortFields(),
@@ -99,14 +108,14 @@ public class CategoryManagerImpl implements CategoryManager {
         return wrapper;
     }
 	
-	private List<Category> findCategories(Integer userId, int startPosition, int maxResults, String sortFields, String sortDirections) {
+	private List<Category> findCategories(Long userId, int startPosition, int maxResults, String sortFields, String sortDirections) {
         Query query = em.createQuery("SELECT c FROM Category c WHERE c.user.id = " + userId+ " ORDER BY " + sortFields + " " + sortDirections);
         query.setFirstResult(startPosition);
         query.setMaxResults(maxResults);
         return query.getResultList();
     }
 	
-	private Integer countCategories(Integer userId) {
+	private Integer countCategories(Long userId) {
         Query query = em.createQuery("SELECT COUNT(c.id) FROM Category c WHERE c.user.id = " + userId);
         return ((Long) query.getSingleResult()).intValue();
     }

@@ -5,9 +5,6 @@ import com.github.perfin.service.dto.PaginatedListWrapper;
 
 import java.util.List;
 
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.QueryParam;
-
 /**
  * Manages all categories. User can only manipulate with his own categories.
  */
@@ -35,8 +32,8 @@ public interface CategoryManager {
      *
      * @return list of all user categories
      */
-    List<Category> getUserCategories(Integer userId);
+    List<Category> getUserCategories();
 
     
-    PaginatedListWrapper<Category> getCategories (Integer userId, Integer page, String sortFields, String sortDirections);
+    PaginatedListWrapper<Category> getCategories (Integer page, String sortFields, String sortDirections);
 }
