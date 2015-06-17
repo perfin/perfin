@@ -1,21 +1,11 @@
 package com.github.perfin.service.api;
 
-import com.github.perfin.model.entity.Currency;
 import com.github.perfin.model.entity.Resource;
+import com.github.perfin.service.dto.PaginatedListWrapper;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public interface ResourceManager {
-
-    /**
-     * Creates a new resource with currency taken from user defaults.
-     *
-     * @param name           name of the resource
-     * @param initialBalance resource balance before first transaction
-     * @return newly created resource
-     */
-    Resource createResource(String name, BigDecimal initialBalance);
 
     /**
      * Creates a new resource with the given currency. Only for premium users.
@@ -25,17 +15,7 @@ public interface ResourceManager {
      * @param currency       resource balance currency
      * @return newly created resource
      */
-    Resource createResource(String name, BigDecimal initialBalance, Currency currency);
-
-    /**
-     * Updates the existing resource with new name
-     *
-     * @param id   id of the existing resource
-     * @param name new resource name
-     * @return updated resource
-     * @throws IllegalArgumentException if id does not exist or belong to another user
-     */
-    Resource updateResource(Long id, String name);
+    Resource saveResource(Resource resource);
 
     /**
      * Deletes the existing resource with the given ID
@@ -51,5 +31,7 @@ public interface ResourceManager {
      * @return
      */
     List<Resource> getUserResources();
+    
+    PaginatedListWrapper<Resource> getUserResources(Integer page, String sortFields, String sortDirections);
 
 }
