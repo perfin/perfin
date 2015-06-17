@@ -1,6 +1,7 @@
 package com.github.perfin.service.api;
 
 import com.github.perfin.model.entity.Currency;
+import com.github.perfin.service.dto.PaginatedListWrapper;
 
 import java.util.List;
 
@@ -16,9 +17,9 @@ public interface CurrencyManager {
      * @param name long currency name (optional)
      * @return newly added currency record
      * @throws IllegalArgumentException if code doesn't conform one of these:
-     * 	- code length equal to 3
-     *  - code is uppercase
-     *  - code is unique															
+     *                                  - code length equal to 3
+     *                                  - code is uppercase
+     *                                  - code is unique
      */
     Currency createCurrency(String code, String name);
 
@@ -32,6 +33,18 @@ public interface CurrencyManager {
      * @throws IllegalArgumentException if id does not exist in database or new code is not unique
      */
     Currency updateCurrency(Long id, String code, String name);
+
+    /**
+     * Create a new currency or update the existing one
+     *
+     * @param currency
+     * @return persisted currency
+     * @throws IllegalArgumentException if code doesn't conform one of these:
+     *                                  - code length equal to 3
+     *                                  - code is uppercase
+     *                                  - code is unique
+     */
+    Currency saveCurrency(Currency currency);
 
     /**
      * Deletes the existing currency record.
@@ -48,5 +61,15 @@ public interface CurrencyManager {
      * @return list of all currencies
      */
     List<Currency> getAllCurrencies();
+
+    /**
+     * Gets currencies
+     *
+     * @param page
+     * @param sortFields
+     * @param sortDirections
+     * @return one page of currency records
+     */
+    PaginatedListWrapper<Currency> getCurrencies(Integer page, String sortFields, String sortDirections);
 
 }
