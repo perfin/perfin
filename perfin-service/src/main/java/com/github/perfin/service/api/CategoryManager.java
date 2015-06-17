@@ -1,8 +1,12 @@
 package com.github.perfin.service.api;
 
 import com.github.perfin.model.entity.Category;
+import com.github.perfin.service.dto.PaginatedListWrapper;
 
 import java.util.List;
+
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.QueryParam;
 
 /**
  * Manages all categories. User can only manipulate with his own categories.
@@ -16,17 +20,7 @@ public interface CategoryManager {
      * @return newly created category
      * @throws IllegalArgumentException if name is empty
      */
-    Category createCategory(String name);
-
-    /**
-     * Updates the existing category
-     *
-     * @param id   id of the existing category
-     * @param name new category name
-     * @return updated category record
-     * @throws IllegalArgumentException if id does not exist or it is someone else's category
-     */
-    Category updateCategory(Long id, String name);
+    Category saveCategory(Category category);
 
     /**
      * Deletes the existing category
@@ -41,6 +35,8 @@ public interface CategoryManager {
      *
      * @return list of all user categories
      */
-    List<Category> getUserCategories();
+    List<Category> getUserCategories(Integer userId);
 
+    
+    PaginatedListWrapper<Category> getCategories (Integer userId, Integer page, String sortFields, String sortDirections);
 }

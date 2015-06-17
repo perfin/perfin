@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 
 import com.github.perfin.model.entity.Currency;
 import com.github.perfin.service.api.CurrencyManager;
+import com.github.perfin.service.dto.PaginatedListWrapper;
 import com.github.perfin.service.rest.ExchangeRatesProvider;
 
 @RunWith(Arquillian.class)
@@ -31,7 +32,8 @@ public class CurrencyManagerImplTest {
             		CurrencyManager.class.getPackage(), 
             		CurrencyManagerImpl.class.getPackage(), 
             		Currency.class.getPackage(),
-            		ExchangeRatesProvider.class.getPackage()).
+            		ExchangeRatesProvider.class.getPackage(),
+            		PaginatedListWrapper.class.getPackage()).
         		addPackages(true, "org.assertj.core");
     }
 	

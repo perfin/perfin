@@ -3,63 +3,112 @@ package com.github.perfin.service.impl;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
 import com.github.perfin.model.entity.Category;
-import com.github.perfin.model.entity.User;
 import com.github.perfin.service.api.CategoryManager;
-import com.github.perfin.service.api.UserManager;
+import com.github.perfin.service.dto.PaginatedListWrapper;
 
 @Stateless
+@ApplicationPath("/resources")
+@Path("categories")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class CategoryManagerImpl implements CategoryManager {
 
 	@PersistenceContext(unitName="primary")
 	private EntityManager em;
-	
-	
-	@Inject
-	private UserManager userManager; 
-	
-	@Override
-	public Category createCategory(String name) {
-		User loggedUser = userManager.getCurrentUser();
 		
-		Category category = new Category();
-		category.setName(name);
-		category.setUser(loggedUser);
-		
+	public Category createCategory(Category category) {
 		em.persist(category);
 		
 		return category;
 	}
 
-	@Override
-	public Category updateCategory(Long id, String name) {
+	public Category updateCategory(Category category) {
 		
-		Category category = em.find(Category.class, id);
-		category.setName(name);
+		Category updated = em.find(Category.class, category.getId());
+		updated.setName(category.getName());
+		updated.setUser(category.getUser());
 		
 		em.merge(category);
 		
 		return category;
 	}
 
-	@Override
-	public void deleteCategory(Long id) {
-		Category category = em.find(Category.class, id);
-		em.remove(category);		
-	}
+	@DELETE
+    @Path("{id}")
+    @Override
+    public void deleteCategory(@PathParam("id") Long id) {
+        Category category = em.find(Category.class, id);
+
+        em.remove(category);
+    }
 
 	@Override
-	public List<Category> getUserCategories() {
+	public List<Category> getUserCategories(Integer userId) {
 		Query query = em.createNamedQuery("getUserCategories");
-		query.setParameter("userId", userManager.getCurrentUser().getId());
+		query.setParameter("userId", userId);
 		
 		List<Category> userCategories = query.getResultList();
 		return userCategories;
 	}
+	
+	@POST
+	public Category saveCategory(Category category) {
+		if(category.getId() == null) {
+			return createCategory(category);
+		} else {
+			return updateCategory(category);
+		}
+	}
+	
+	@Override
+	@GET
+    public PaginatedListWrapper<Category> getCategories (
+    		@QueryParam("userId") Integer userId,
+            @DefaultValue("1") @QueryParam("page") Integer page,
+            @DefaultValue("id") @QueryParam("sortFields") String sortFields,
+            @DefaultValue("asc") @QueryParam("sortDirections") String sortDirections) {
+        PaginatedListWrapper<Category> paginatedListWrapper = new PaginatedListWrapper<>();
+        paginatedListWrapper.setCurrentPage(page);
+        paginatedListWrapper.setSortFields(sortFields);
+        paginatedListWrapper.setSortDirections(sortDirections);
+        paginatedListWrapper.setPageSize(5);
+        return findCategories(userId, paginatedListWrapper);
+    }
+	
+	private PaginatedListWrapper<Category> findCategories(Integer userId, PaginatedListWrapper<Category> wrapper) {
+        wrapper.setTotalResults(countCategories(userId));
+        int start = (wrapper.getCurrentPage() - 1) * wrapper.getPageSize();
+        wrapper.setList(findCategories(userId, start, wrapper.getPageSize(), wrapper.getSortFields(),
+                wrapper.getSortDirections()));
+        return wrapper;
+    }
+	
+	private List<Category> findCategories(Integer userId, int startPosition, int maxResults, String sortFields, String sortDirections) {
+        Query query = em.createQuery("SELECT c FROM Category c WHERE c.user.id = " + userId+ " ORDER BY " + sortFields + " " + sortDirections);
+        query.setFirstResult(startPosition);
+        query.setMaxResults(maxResults);
+        return query.getResultList();
+    }
+	
+	private Integer countCategories(Integer userId) {
+        Query query = em.createQuery("SELECT COUNT(c.id) FROM Category c WHERE c.user.id = " + userId);
+        return ((Long) query.getSingleResult()).intValue();
+    }
 
 }
