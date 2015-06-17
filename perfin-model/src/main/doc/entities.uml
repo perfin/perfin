@@ -2,12 +2,51 @@
 <Diagram>
   <ID>JAVA</ID>
   <OriginalElement />
-  <nodes />
+  <nodes>
+    <node x="-647.0" y="-369.0">com.github.perfin.model.entity.ExchangeRate</node>
+    <node x="-334.0" y="-157.0">com.github.perfin.model.entity.Resource</node>
+    <node x="79.0" y="-349.0">com.github.perfin.model.entity.Category</node>
+    <node x="49.0" y="-158.0">com.github.perfin.model.entity.Transaction</node>
+    <node x="-627.0" y="-123.0">com.github.perfin.model.entity.Currency</node>
+    <node x="-304.0" y="-349.0">com.github.perfin.model.entity.User</node>
+  </nodes>
   <notes />
-  <edges />
+  <edges>
+    <edge source="com.github.perfin.model.entity.Transaction" target="com.github.perfin.model.entity.Resource">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.github.perfin.model.entity.Category" target="com.github.perfin.model.entity.User">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.github.perfin.model.entity.Resource" target="com.github.perfin.model.entity.Currency">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.github.perfin.model.entity.Transaction" target="com.github.perfin.model.entity.Category">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.github.perfin.model.entity.ExchangeRate" target="com.github.perfin.model.entity.Currency">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.github.perfin.model.entity.Resource" target="com.github.perfin.model.entity.User">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.github.perfin.model.entity.User" target="com.github.perfin.model.entity.Currency">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+  </edges>
   <settings layout="Hierarchic Group" zoom="1.0" x="0.0" y="0.0" />
   <SelectedNodes />
-  <Categories />
+  <Categories>
+    <Category>Fields</Category>
+  </Categories>
   <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
 </Diagram>
 
