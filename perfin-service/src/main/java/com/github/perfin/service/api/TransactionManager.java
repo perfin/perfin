@@ -25,20 +25,6 @@ public interface TransactionManager {
     Transaction createTransaction(Resource resource, Category category, BigDecimal amount, String note);
 
     /**
-     * Creates transaction between resources.
-     *
-     * @param originalResource resource which balance is decreased
-     * @param targetResource   resource which balance is increased
-     * @param category         transaction category
-     * @param originalAmount   amount in original resource default currency
-     * @param targetAmount     amount in target resource default currency
-     * @param note             note explaining purpose of transaction (optional)
-     * @return new transaction record
-     */
-    Transaction createTransfer(Resource originalResource, Resource targetResource, Category category,
-            BigDecimal originalAmount, BigDecimal targetAmount, String note);
-
-    /**
      * Updates transaction attributes.
      *
      * @param id       transaction ID

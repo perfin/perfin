@@ -39,9 +39,6 @@ public class Transaction implements Serializable {
     @Column
     private String note;
 
-    @Column
-    private Transaction associatedTransaction;
-
     public Long getId() {
         return id;
     }
@@ -88,14 +85,6 @@ public class Transaction implements Serializable {
 
     public void setNote(String note) {
         this.note = note;
-    }
-
-    public Transaction getAssociatedTransaction() {
-        return associatedTransaction;
-    }
-
-    public void setAssociatedTransaction(Transaction associatedTransaction) {
-        this.associatedTransaction = associatedTransaction;
     }
 
 }

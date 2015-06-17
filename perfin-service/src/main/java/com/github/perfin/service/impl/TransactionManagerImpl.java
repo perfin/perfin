@@ -34,15 +34,6 @@ public class TransactionManagerImpl implements TransactionManager {
 		// TODO
 		return null;
 	}
-
-	@Override
-	public Transaction createTransfer(Resource originalResource,
-			Resource targetResource, Category category,
-			BigDecimal originalAmount, BigDecimal targetAmount, String note) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	
 	/**
 	 * TODO
