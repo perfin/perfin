@@ -26,7 +26,7 @@ public class CurrencyManagerImplTest {
     public static Archive<?> getDeployment() {
         return ShrinkWrap
                 .create(WebArchive.class)
-                .addAsResource("test-persistence.xml", "META-INF/persistence.xml")
+                .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
                 .addPackages(true, 
             		CurrencyManager.class.getPackage(), 
             		CurrencyManagerImpl.class.getPackage(), 
