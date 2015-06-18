@@ -58,7 +58,7 @@ public class CurrencyManagerImplTest {
             }
         }
     }
-
+    
     @Test
     public void testCreateCurrency() {
     	Currency currency = currencyManager.createCurrency("ABC", "ABECE");
@@ -93,22 +93,32 @@ public class CurrencyManagerImplTest {
 	
     @Test
     @RunAsClient
-    public void testSaveCurrency(@ArquillianResource URL base) throws URISyntaxException {
-    	Currency unstored = new Currency();
-    	unstored.setCode("QWE");
-    	
-    	Entity<Currency> currency = Entity.entity(unstored, MediaType.APPLICATION_JSON);
+    public void testRest(@ArquillianResource URL base) throws URISyntaxException {
+        Currency unstored = new Currency();
+        unstored.setCode("QWE");
         
-    	Client client = ClientBuilder.newClient();
+        Entity<Currency> currency = Entity.entity(unstored, MediaType.APPLICATION_JSON);
+        
+        Client client = ClientBuilder.newClient();
         WebTarget target = client.target(base.toURI() + "resources/currencies/");
-	    Response response = target.request(MediaType.APPLICATION_JSON).post(currency);
+        Response response = target.request(MediaType.APPLICATION_JSON).post(currency);
+        
+        Currency stored = response.readEntity(Currency.class);
+        assertThat(stored.getId()).isNotNull();
+        assertThat(stored.getCode()).isEqualTo(unstored.getCode());
+        assertThat(stored.getName()).isEqualTo(unstored.getName());
+        
+        Response responseGet = target.request(MediaType.APPLICATION_JSON).get();
+        PaginatedListWrapper<Currency> wrapper = responseGet.readEntity(PaginatedListWrapper.class);
+        assertThat(wrapper.getList().size()).isEqualTo(1);
+        
+        WebTarget targetDelete = client.target(base.toURI() + "resources/currencies/" 
+                + stored.getId() + "/");
+        targetDelete.request().delete();
+        
+        responseGet = target.request(MediaType.APPLICATION_JSON).get();
+        wrapper = responseGet.readEntity(PaginatedListWrapper.class);
+        assertThat(wrapper.getList().size()).isEqualTo(0);
 	    
-	    Currency stored = response.readEntity(Currency.class);
-	    assertThat(stored.getId()).isNotNull();
-	    assertThat(stored.getCode()).isEqualTo(unstored.getCode());
-	    assertThat(stored.getName()).isEqualTo(unstored.getName());
     }
-    
-    
-
 }
