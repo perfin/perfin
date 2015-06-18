@@ -3,8 +3,8 @@ package com.github.perfin.service.api;
 import com.github.perfin.model.entity.Category;
 import com.github.perfin.model.entity.Resource;
 import com.github.perfin.model.entity.Transaction;
+import com.github.perfin.service.dto.PaginatedListWrapper;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -22,20 +22,7 @@ public interface TransactionManager {
      * @param note     note explaining purpose of transaction (optional)
      * @return new transaction record
      */
-    Transaction createTransaction(Resource resource, Category category, BigDecimal amount, String note);
-
-    /**
-     * Updates transaction attributes.
-     *
-     * @param id       transaction ID
-     * @param resource new resource, nothing changed if null
-     * @param category new category, nothing changed if null
-     * @param amount   new amount, nothing changed if null
-     * @param note     new note, nothing changed if null
-     * @return updated transaction record
-     * @throws IllegalArgumentException if id does not exist or it is someone else's transaction
-     */
-    Transaction updateTransaction(Long id, Resource resource, Category category, BigDecimal amount, String note);
+    Transaction saveTransaction(Transaction transaction);
 
     /**
      * Deletes the transaction with the given ID. If it is transfer, associated transaction is also deleted.
@@ -68,5 +55,7 @@ public interface TransactionManager {
      * @return list of transactions with the given resource
      */
     List<Transaction> getTransactionsByResource(Resource resource);
+    
+    PaginatedListWrapper<Transaction> getTransactions(Integer page, String sortFields, String sortDirections);
 
 }
