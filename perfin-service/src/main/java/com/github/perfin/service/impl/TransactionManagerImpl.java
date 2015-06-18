@@ -149,4 +149,17 @@ public class TransactionManagerImpl implements TransactionManager {
         return ((Long) query.getSingleResult()).intValue();
 	}
 
+    void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
+        
+    }
+    
+    void setEntityManager(EntityManager em) {
+        this.em = em;
+    }
+    
+    void setResourceManager(ResourceManager resourceManager) {
+        this.resourceManager = resourceManager;
+    }
+
 }

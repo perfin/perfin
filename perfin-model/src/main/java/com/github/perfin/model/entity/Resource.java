@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -27,7 +29,7 @@ public class Resource implements Serializable {
     @Column(nullable = false)
     private BigDecimal currentBalance;
 
-    @Column(nullable = false)
+    @ManyToOne(optional=false)
     private User user;
 
     public Long getId() {

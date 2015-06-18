@@ -123,4 +123,13 @@ public class ResourceManagerImpl implements ResourceManager {
         query.setMaxResults(maxResults);
         return query.getResultList();
     }
+
+    void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
+        
+    }
+
+    void setEntityManager(EntityManager em) {
+        this.em = em;
+    }
 }
