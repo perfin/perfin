@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 
 import java.io.Serializable;
@@ -20,7 +21,7 @@ public class Category implements Serializable {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @ManyToOne(optional=false)
     private User user;
 
     public Long getId() {

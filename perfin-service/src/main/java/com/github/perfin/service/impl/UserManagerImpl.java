@@ -26,8 +26,7 @@ public class UserManagerImpl implements UserManager {
 
 	@Override
 	public User getCurrentUser() {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException("unspported yet");
 	}
 
 }

@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -20,6 +21,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.github.perfin.model.entity.Category;
+import com.github.perfin.model.entity.User;
 import com.github.perfin.service.api.CategoryManager;
 import com.github.perfin.service.api.UserManager;
 import com.github.perfin.service.dto.PaginatedListWrapper;
@@ -38,7 +40,7 @@ public class CategoryManagerImpl implements CategoryManager {
 	private UserManager userManager;
 		
 	public Category createCategory(Category category) {
-		em.persist(category);
+	    em.persist(category);
 		
 		return category;
 	}
@@ -100,7 +102,8 @@ public class CategoryManagerImpl implements CategoryManager {
     }
 	
 	private PaginatedListWrapper<Category> findCategories(PaginatedListWrapper<Category> wrapper) {
-		Long userId = userManager.getCurrentUser().getId();
+		User user = userManager.getCurrentUser();
+		Long userId = user.getId();
         wrapper.setTotalResults(countCategories(userId));
         int start = (wrapper.getCurrentPage() - 1) * wrapper.getPageSize();
         wrapper.setList(findCategories(userId, start, wrapper.getPageSize(), wrapper.getSortFields(),
@@ -118,6 +121,15 @@ public class CategoryManagerImpl implements CategoryManager {
 	private Integer countCategories(Long userId) {
         Query query = em.createQuery("SELECT COUNT(c.id) FROM Category c WHERE c.user.id = " + userId);
         return ((Long) query.getSingleResult()).intValue();
+    }
+	
+    void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
+        
+    }
+    
+    void setEntityManager(EntityManager em) {
+        this.em = em;
     }
 
 }

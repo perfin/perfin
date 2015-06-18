@@ -78,6 +78,13 @@
                 <version>8.2.0.Final</version>
                 <scope>test</scope>
             </dependency>
+		    <dependency>
+                <groupId>org.jboss.arquillian.extension</groupId>
+                <artifactId>arquillian-transaction-bom</artifactId>
+                <version>1.0.1.Final</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
