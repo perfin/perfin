@@ -2,13 +2,25 @@ package com.github.perfin.service.impl;
 
 import static org.assertj.core.api.Assertions.*;
 
-import javax.inject.Inject;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.List;
 
+import javax.inject.Inject;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -36,8 +48,18 @@ public class CurrencyManagerImplTest {
             		PaginatedListWrapper.class.getPackage()).
         		addPackages(true, "org.assertj.core");
     }
-	
-	@Test
+
+    @After
+    public void clearRecords() {
+        if(currencyManager != null) {
+        List<Currency> currencies = currencyManager.getAllCurrencies();
+        for(Currency c : currencies) {
+        currencyManager.deleteCurrency(c.getId());
+            }
+        }
+    }
+
+    @Test
     public void testCreateCurrency() {
     	Currency currency = currencyManager.createCurrency("ABC", "ABECE");
     	assertThat(currency.getId()).isNotNull();
@@ -59,11 +81,34 @@ public class CurrencyManagerImplTest {
     	
 		currencyManager.deleteCurrency(currency.getId());
 		assertThat(currencyManager.getAllCurrencies()).doesNotContain(currency);
+		assertThat(currencyManager.getAllCurrencies().size()).isEqualTo(0);
 	}
 	
 	@Test
 	public void testGetAllCurrencies() {
 		Currency currency = currencyManager.createCurrency("AAA", null);
 		assertThat(currencyManager.getAllCurrencies()).isNotEmpty().contains(currency);
+		assertThat(currencyManager.getAllCurrencies().size()).isEqualTo(1);
 	}
+	
+    @Test
+    @RunAsClient
+    public void testSaveCurrency(@ArquillianResource URL base) throws URISyntaxException {
+    	Currency unstored = new Currency();
+    	unstored.setCode("QWE");
+    	
+    	Entity<Currency> currency = Entity.entity(unstored, MediaType.APPLICATION_JSON);
+        
+    	Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(base.toURI() + "resources/currencies/");
+	    Response response = target.request(MediaType.APPLICATION_JSON).post(currency);
+	    
+	    Currency stored = response.readEntity(Currency.class);
+	    assertThat(stored.getId()).isNotNull();
+	    assertThat(stored.getCode()).isEqualTo(unstored.getCode());
+	    assertThat(stored.getName()).isEqualTo(unstored.getName());
+    }
+    
+    
+
 }

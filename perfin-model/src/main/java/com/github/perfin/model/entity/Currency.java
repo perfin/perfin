@@ -14,6 +14,8 @@ import java.io.Serializable;
 @NamedQuery(name="getAllCurrencies", query="SELECT c FROM Currency c")
 public class Currency implements Serializable {
 
+    private static final long serialVersionUID = -3009184980419865445L;
+
     @Id
     @GeneratedValue
     @Column
