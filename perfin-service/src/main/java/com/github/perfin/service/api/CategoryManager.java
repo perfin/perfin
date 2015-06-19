@@ -12,9 +12,11 @@ public interface CategoryManager {
 
     /**
      * Creates a new category for the logged user
+     * 
+     * If is category already saved, only its name can be changed
      *
-     * @param name category name
-     * @return newly created category
+     * @param category category to be saved
+     * @return saved category
      * @throws IllegalArgumentException if name is empty
      */
     Category saveCategory(Category category);
@@ -26,14 +28,6 @@ public interface CategoryManager {
      * @throws IllegalArgumentException if id does not exist, it is someone else's category or there are references
      */
     void deleteCategory(Long id);
-
-    /**
-     * Gets all categories of the logged user
-     *
-     * @return list of all user categories
-     */
-    List<Category> getUserCategories();
-
     
     PaginatedListWrapper<Category> getCategories (Integer page, String sortFields, String sortDirections);
 }

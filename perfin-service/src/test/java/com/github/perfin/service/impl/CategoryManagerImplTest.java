@@ -2,9 +2,11 @@ package com.github.perfin.service.impl;
 
 import static org.assertj.core.api.Assertions.*;
 
+import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -13,6 +15,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +23,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
-
 import org.mockito.MockitoAnnotations;
 
 import com.github.perfin.model.entity.Category;
@@ -53,6 +55,7 @@ public class CategoryManagerImplTest {
 	private TestUserManager testUserManager;
 	
 	private User user;
+	private Currency cur;
 	
 	@Deployment
     public static Archive<?> getDeployment() {
@@ -79,20 +82,33 @@ public class CategoryManagerImplTest {
 	@Before
 	public void createUser() {
 	    
-	    if(user == null) {
-	        Currency cur = new Currency();
-	        cur.setCode("CUR");
-	        cur.setName("CURRENCY");
-	        cur = currencyManager.saveCurrency(cur);
-	        User u = new User();
-	        u.setUserName("john tester");
-	        u.setDefaultCurrency(cur);
-	        user = testUserManager.storeUser(u);
-	        
-	        MockitoAnnotations.initMocks(this);
-	        Mockito.when(userManager.getCurrentUser()).thenReturn(user);
-	    }
+        cur = new Currency();
+        cur.setCode("CUR");
+        cur.setName("CURRENCY");
+        cur = currencyManager.saveCurrency(cur);
+        User u = new User();
+        u.setUserName("john tester");
+        u.setDefaultCurrency(cur);
+        user = testUserManager.storeUser(u);
+        
+        MockitoAnnotations.initMocks(this);
+        Mockito.when(userManager.getCurrentUser()).thenReturn(user);
+	    
 	}
+	
+	@After
+	public void clearRecords() {
+	    PaginatedListWrapper<Category> categories = categoryManager.getCategories(1, "id", "asc");
+	    for(Category c : categories.getList()) {
+	        categoryManager.deleteCategory(c.getId());
+	    }
+	    
+	    User u = em.find(User.class, user.getId());
+	    em.remove(u);
+	    
+	    currencyManager.deleteCurrency(cur.getId());
+	}
+	
     
 	@Test
 	public void testSaveGetDelete() {
@@ -113,6 +129,35 @@ public class CategoryManagerImplTest {
         
         PaginatedListWrapper<Category> categories = categoryManager.getCategories(1, "id", "asc");
         assertThat(categories.getList().size()).isEqualTo(2);
+	}
+	
+	@Test
+	public void testUpdateCategory() {
+	    Category category = new Category();
+        category.setName("unstored");
+        category.setUser(user);
+        categoryManager.saveCategory(category);
+        
+        Category stored = category;
+        stored.setName("stored");
+        stored = categoryManager.saveCategory(stored);
+        
+        assertThat(category.getId()).isEqualTo(stored.getId());
+        assertThat(category.getUser()).isEqualTo(stored.getUser());
+        assertThat(category.getName()).isEqualTo("stored");
+	}
+	
+	@Test
+	public void testInvalidCategories() {
+	    Category category = new Category();
+	    category.setName("unstored");
+	    
+	    try{
+	        categoryManager.saveCategory(category);
+	        fail("saved category without user");
+	    }catch(IllegalArgumentException e) {
+	        //ok
+	    }
 	}
     
 }

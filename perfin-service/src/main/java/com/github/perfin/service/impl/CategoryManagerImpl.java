@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -39,17 +38,16 @@ public class CategoryManagerImpl implements CategoryManager {
 	@Inject
 	private UserManager userManager;
 		
-	public Category createCategory(Category category) {
+	private Category createCategory(Category category) {
 	    em.persist(category);
 		
 		return category;
 	}
 
-	public Category updateCategory(Category category) {
+	private Category updateCategory(Category category) {
 		
 		Category updated = em.find(Category.class, category.getId());
 		updated.setName(category.getName());
-		updated.setUser(category.getUser());
 		
 		em.merge(category);
 		
@@ -64,21 +62,12 @@ public class CategoryManagerImpl implements CategoryManager {
 
         em.remove(category);
     }
-
-	@Override
-	public List<Category> getUserCategories() {
-		
-		Long userId = userManager.getCurrentUser().getId();
-		
-		Query query = em.createNamedQuery("getUserCategories");
-		query.setParameter("userId", userId);
-		
-		List<Category> userCategories = query.getResultList();
-		return userCategories;
-	}
 	
 	@POST
 	public Category saveCategory(Category category) {
+	    if(category == null || category.getUser() == null) {
+	        throw new IllegalArgumentException(category + "can't be saved.");
+	    }
 		if(category.getId() == null) {
 			return createCategory(category);
 		} else {
