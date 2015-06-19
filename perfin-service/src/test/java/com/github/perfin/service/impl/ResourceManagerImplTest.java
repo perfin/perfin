@@ -15,6 +15,7 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,6 +56,7 @@ public class ResourceManagerImplTest {
     private EntityManager em;
     
     private User user;
+    private Currency cur;
     
     @Deployment
     public static Archive<?> getDeployment() {
@@ -79,21 +81,33 @@ public class ResourceManagerImplTest {
     }
     
     @Before
-    public void createUser() {
+    public void createUser() {    
         
-        if(user == null) {
-            Currency cur = new Currency();
-            cur.setCode("CUR");
-            cur.setName("CURRENCY");
-            cur = currencyManager.saveCurrency(cur);
-            User u = new User();
-            u.setUserName("john tester");
-            u.setDefaultCurrency(cur);
-            user = testUserManager.storeUser(u);
-            
-            MockitoAnnotations.initMocks(this);
-            Mockito.when(userManager.getCurrentUser()).thenReturn(user);
+        cur = new Currency();
+        cur.setCode("CUR");
+        cur.setName("CURRENCY");
+        cur = currencyManager.saveCurrency(cur);
+        User u = new User();
+        u.setUserName("john tester");
+        u.setDefaultCurrency(cur);
+        user = testUserManager.storeUser(u);
+        
+        MockitoAnnotations.initMocks(this);
+        Mockito.when(userManager.getCurrentUser()).thenReturn(user);
+        
+    }
+    
+    @After
+    public void clearRecords() {
+        PaginatedListWrapper<Resource> resources = resourceManager.getUserResources(1, "id", "asc");
+        for(Resource r : resources.getList()) {
+            resourceManager.deleteResource(r.getId());
         }
+        
+        User u = em.find(User.class, user.getId());
+        em.remove(u);
+        
+        currencyManager.deleteCurrency(cur.getId());
     }
     
     @Test
@@ -116,5 +130,33 @@ public class ResourceManagerImplTest {
         resourceManager.deleteResource(stored.getId());
         resources = resourceManager.getUserResources(1, "id", "asc");
         assertThat(resources.getList().size()).isEqualTo(0);
+    }
+    
+    @Test
+    public void testDefaultCerrency() {
+        Resource res = new Resource();
+        res.setName("my resource");
+        res.setInitialBalance(BigDecimal.ONE);
+        res.setCurrentBalance(BigDecimal.TEN);
+        res.setUser(user);
+        
+        res = resourceManager.saveResource(res);
+        assertThat(res.getCurrency()).isEqualTo(user.getDefaultCurrency());
+    }
+    
+    @Test
+    public void testUpdate() {
+        Resource res = new Resource();
+        res.setName("my resource");
+        res.setInitialBalance(BigDecimal.ONE);
+        res.setCurrentBalance(BigDecimal.TEN);
+        res.setUser(user);
+        
+        res = resourceManager.saveResource(res);
+        
+        res.setCurrentBalance(BigDecimal.TEN.multiply(BigDecimal.TEN));
+        res = resourceManager.saveResource(res);
+        
+        assertThat(res.getCurrentBalance()).isEqualTo(BigDecimal.TEN.multiply(BigDecimal.TEN));
     }
 }

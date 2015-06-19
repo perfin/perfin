@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -27,6 +28,7 @@ public class Category implements Serializable {
     private String name;
 
     @ManyToOne(optional=false)
+    @NotNull(message = "Category must belong to some user")
     private User user;
 
     public Long getId() {

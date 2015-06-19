@@ -51,8 +51,6 @@ public class ResourceManagerImpl implements ResourceManager {
 		updated.setName(resource.getName());
 		updated.setCurrency(resource.getCurrency());
 		updated.setCurrentBalance(resource.getCurrentBalance());
-		updated.setInitialBalance(resource.getInitialBalance());
-		updated.setUser(resource.getUser());
 		
 		em.merge(resource);
 		
@@ -67,18 +65,18 @@ public class ResourceManagerImpl implements ResourceManager {
 		em.remove(resource);
 	}
 
-	public List<Resource> getUserResources() {
-		Query query = em.createNamedQuery("getUserResources");
-		query.setParameter("userId", userManager.getCurrentUser().getId());
-		
-		List<Resource> userResources = query.getResultList();
-		
-		return userResources;
-	}
-
 	@Override
 	@POST
 	public Resource saveResource(Resource resource) {
+	    
+	    if(resource == null) {
+	        throw new IllegalArgumentException("Can't be saved null instance");
+	    }
+	    
+	    if(resource.getCurrency() == null) {
+	        resource.setCurrency(userManager.getCurrentUser().getDefaultCurrency());
+	    }
+	    
 		if(resource.getId() == null) {
 			return createResource(resource);
 		} else {

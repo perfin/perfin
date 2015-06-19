@@ -7,6 +7,9 @@ public interface ResourceManager {
 
     /**
      * Creates a new resource with the given currency. Only for premium users.
+     * 
+     * If is resource already stored, user can't be changed 
+     * and initial balance can't be changed
      *
      * @param name           name of the resource
      * @param initialBalance resource balance before first transaction
