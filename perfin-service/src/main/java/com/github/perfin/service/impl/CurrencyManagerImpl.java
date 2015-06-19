@@ -4,13 +4,18 @@ import com.github.perfin.model.entity.Currency;
 import com.github.perfin.service.api.CurrencyManager;
 import com.github.perfin.service.dto.PaginatedListWrapper;
 
+import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.RollbackException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
+
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.List;
 
 @Stateless
@@ -23,7 +28,7 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
     @PersistenceContext
     private EntityManager em;
 
-    public Currency createCurrency(String code, String name) {
+    private Currency createCurrency(String code, String name) {
         Currency currency = new Currency();
         currency.setCode(code);
         currency.setName(name);
@@ -33,7 +38,7 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
         return currency;
     }
 
-    public Currency updateCurrency(Long id, String code, String name) {
+    private Currency updateCurrency(Long id, String code, String name) {
         Currency currency = em.find(Currency.class, id);
 
         currency.setCode(code);
@@ -47,10 +52,23 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
     @POST
     @Override
     public Currency saveCurrency(Currency currency) {
-        if (currency.getId() == null) {
-            return createCurrency(currency.getCode(), currency.getName());
-        } else {
-            return updateCurrency(currency.getId(), currency.getCode(), currency.getName());
+        if(currency == null || currency.getCode() == null) {
+            throw new IllegalArgumentException("Null instance can't be saved"
+                    + "and currency code can't be null");
+        }
+        if(!StringUtils.isAllUpperCase(currency.getCode())) {
+            throw new IllegalArgumentException("Currency code must be uppercase. " +
+                    "But was: " + currency.getCode());
+        }
+        
+        try{
+            if (currency.getId() == null) {
+                return createCurrency(currency.getCode(), currency.getName());
+            } else {
+                return updateCurrency(currency.getId(), currency.getCode(), currency.getName());
+            }
+        }catch(EJBTransactionRolledbackException e) {
+            throw new IllegalArgumentException("Unabe to save currency: " + currency, e);
         }
     }
 
@@ -81,13 +99,6 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
         wrapper.setList(findCurrencies(start, wrapper.getPageSize(), wrapper.getSortFields(),
                 wrapper.getSortDirections()));
         return wrapper;
-    }
-
-    public List<Currency> getAllCurrencies() {
-        Query query = em.createNamedQuery("getAllCurrencies");
-
-        List<Currency> currencies = query.getResultList();
-        return currencies;
     }
 
     @GET

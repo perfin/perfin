@@ -70,6 +70,9 @@ public class CategoryManagerImplTest {
         war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
                 .resolve("org.mockito:mockito-all").withTransitivity().asFile());
         
+        war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
+                .resolve("org.apache.commons:commons-lang3").withTransitivity().asFile());
+        
         return war;
     }
 	

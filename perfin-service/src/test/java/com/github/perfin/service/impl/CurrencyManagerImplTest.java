@@ -6,7 +6,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 
+import javax.ejb.EJBException;
 import javax.inject.Inject;
+import javax.transaction.RollbackException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -21,6 +23,7 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,7 +41,7 @@ public class CurrencyManagerImplTest {
 	
 	@Deployment
     public static Archive<?> getDeployment() {
-        return ShrinkWrap
+        WebArchive war = ShrinkWrap
                 .create(WebArchive.class)
                 .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
                 .addPackages(true, 
@@ -48,6 +51,14 @@ public class CurrencyManagerImplTest {
             		ExchangeRatesProvider.class.getPackage(),
             		PaginatedListWrapper.class.getPackage()).
         		addPackages(true, "org.assertj.core");
+        
+        war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
+                .resolve("org.mockito:mockito-all").withTransitivity().asFile());
+        
+        war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
+                .resolve("org.apache.commons:commons-lang3").withTransitivity().asFile());
+        
+        return war;
     }
 
     @After
@@ -78,6 +89,61 @@ public class CurrencyManagerImplTest {
         PaginatedListWrapper<Currency> wrapper = currencyManager.getCurrencies(1, "id", "asc");
         assertThat(wrapper.getList().size()).isEqualTo(1);
         assertThat(wrapper.getList().get(0)).isEqualTo(currencyTwo);
+    }
+    
+    @Test
+    public void testUpdate() {
+        Currency currency = new Currency();
+        currency.setCode("ABC");
+        currency = currencyManager.saveCurrency(currency);
+        
+        Currency updated = currency;
+        updated.setName("Not Nulll Name");
+        updated = currencyManager.saveCurrency(updated);
+        
+        PaginatedListWrapper<Currency> wrapper = currencyManager.getCurrencies(1, "id", "asc");
+        assertThat(wrapper.getList().size()).isEqualTo(1);
+        assertThat(wrapper.getList().get(0)).isEqualTo(updated);
+    }
+    
+    @Test
+    public void testInvalidOperations() {
+        // invalid code
+        Currency currency = new Currency();
+        currency.setCode("aB");
+        try {
+            currencyManager.saveCurrency(currency);
+            fail("Code is not uppercase ond of length 3");
+        } catch(EJBException ejbe) { 
+            assertThat(ejbe.getCause()).isInstanceOf(IllegalArgumentException.class);
+        }
+        
+        currency.setCode(null);
+        try {
+            currencyManager.saveCurrency(currency);
+            fail("Code is not uppercase ond of length 3");
+        } catch(EJBException ejbe) { 
+            assertThat(ejbe.getCause()).isInstanceOf(IllegalArgumentException.class);
+        }
+        
+        currency.setCode("XXX");
+        currencyManager.saveCurrency(currency);
+        
+        Currency nonUnique = new Currency();
+        nonUnique.setCode("XXX");
+        try {
+            currencyManager.saveCurrency(nonUnique);
+            fail("stored non unique code");
+        } catch(EJBException ejbe) { 
+            assertThat(ejbe.getCause()).isInstanceOf(RollbackException.class);
+        }
+        
+        try {
+            currencyManager.deleteCurrency(123456l);
+            fail("fail non existing record");
+        }catch(EJBException e) {
+            //ok
+        }
     }
 	
     @Test
