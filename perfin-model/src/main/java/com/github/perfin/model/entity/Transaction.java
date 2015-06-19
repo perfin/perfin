@@ -4,8 +4,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+
+import org.hibernate.sql.ordering.antlr.Factory;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -19,15 +22,17 @@ import java.time.LocalDate;
 })
 public class Transaction implements Serializable {
 
+    private static final long serialVersionUID = -4799356004050651738L;
+
     @Id
     @GeneratedValue
     @Column
     private Long id;
 
-    @Column(nullable = false)
+    @ManyToOne(optional=false)
     private Resource resource;
 
-    @Column(nullable = false)
+    @ManyToOne(optional=false)
     private Category category;
 
     @Column(nullable = false)
