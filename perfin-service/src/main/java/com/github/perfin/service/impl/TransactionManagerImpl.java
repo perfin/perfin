@@ -21,7 +21,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.github.perfin.model.entity.Category;
-import com.github.perfin.model.entity.Currency;
 import com.github.perfin.model.entity.Resource;
 import com.github.perfin.model.entity.Transaction;
 import com.github.perfin.service.api.ResourceManager;
@@ -45,14 +44,43 @@ public class TransactionManagerImpl implements TransactionManager {
 	@Inject
 	private UserManager userManager;
 
-	public Transaction createTransaction(Transaction transaction) {
+	private Transaction createTransaction(Transaction transaction) {
 		em.persist(transaction);
 		
 		return transaction;
 	}
 	
-	public Transaction updateTransaction(Transaction transaction) {
-		throw new UnsupportedOperationException("unsupoorted yet");
+	private Transaction updateTransaction(Transaction transaction) {
+		Transaction old = em.find(Transaction.class, transaction.getId());
+		Resource oldResource = old.getResource();
+		if(oldResource.getId().equals(transaction.getResource().getId())) {
+		    BigDecimal oldAmount = old.getAmount();
+		    BigDecimal newAmount = transaction.getAmount();
+		    BigDecimal oldBallance = oldResource.getCurrentBalance();
+		    
+		    oldResource.setCurrentBalance(oldBallance.subtract(oldAmount).add(newAmount));
+		    resourceManager.saveResource(oldResource);
+		} else {
+		    BigDecimal oldAmount = old.getAmount();
+            BigDecimal newAmount = transaction.getAmount();
+            BigDecimal oldBallance = oldResource.getCurrentBalance();
+            
+            oldResource.setCurrentBalance(oldBallance.subtract(oldAmount));
+            resourceManager.saveResource(oldResource);
+            
+            Resource newResource = transaction.getResource();
+            newResource.setCurrentBalance(newResource.getCurrentBalance().add(newAmount));
+            resourceManager.saveResource(newResource);
+		}
+		
+		old.setCategory(transaction.getCategory());
+		old.setDate(transaction.getDate());
+		old.setNote(transaction.getNote());
+		old.setResource(transaction.getResource());
+		
+		em.merge(old);
+		
+		return old;
 	}
 
 	@Override

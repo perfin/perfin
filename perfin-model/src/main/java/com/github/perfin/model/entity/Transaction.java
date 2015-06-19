@@ -7,9 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-
-import org.hibernate.sql.ordering.antlr.Factory;
-
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -30,15 +28,19 @@ public class Transaction implements Serializable {
     private Long id;
 
     @ManyToOne(optional=false)
+    @NotNull(message="transaction must belong to resource")
     private Resource resource;
 
     @ManyToOne(optional=false)
+    @NotNull(message="transaction must belong to category")
     private Category category;
 
     @Column(nullable = false)
+    @NotNull(message="amount of transaction can't be null")
     private BigDecimal amount;
 
     @Column(nullable = false)
+    @NotNull(message="date of transaction can't be null")
     private LocalDate date;
 
     @Column
