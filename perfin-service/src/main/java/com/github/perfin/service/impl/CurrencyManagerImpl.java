@@ -23,7 +23,6 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
     @PersistenceContext
     private EntityManager em;
 
-    @Override
     public Currency createCurrency(String code, String name) {
         Currency currency = new Currency();
         currency.setCode(code);
@@ -34,7 +33,6 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
         return currency;
     }
 
-    @Override
     public Currency updateCurrency(Long id, String code, String name) {
         Currency currency = em.find(Currency.class, id);
 
@@ -85,7 +83,6 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
         return wrapper;
     }
 
-    @Override
     public List<Currency> getAllCurrencies() {
         Query query = em.createNamedQuery("getAllCurrencies");
 

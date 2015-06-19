@@ -3,8 +3,6 @@ package com.github.perfin.service.api;
 import com.github.perfin.model.entity.Resource;
 import com.github.perfin.service.dto.PaginatedListWrapper;
 
-import java.util.List;
-
 public interface ResourceManager {
 
     /**
@@ -24,13 +22,6 @@ public interface ResourceManager {
      * @throws IllegalArgumentException if id does not exist or belong to another user
      */
     void deleteResource(Long id);
-
-    /**
-     * Gets all resources of the logged user
-     *
-     * @return
-     */
-    List<Resource> getUserResources();
     
     PaginatedListWrapper<Resource> getUserResources(Integer page, String sortFields, String sortDirections);
 

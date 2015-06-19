@@ -67,7 +67,6 @@ public class ResourceManagerImpl implements ResourceManager {
 		em.remove(resource);
 	}
 
-	@Override
 	public List<Resource> getUserResources() {
 		Query query = em.createNamedQuery("getUserResources");
 		query.setParameter("userId", userManager.getCurrentUser().getId());

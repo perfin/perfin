@@ -53,7 +53,7 @@ public class CurrencyManagerImplTest {
     @After
     public void clearRecords() {
         if(currencyManager != null) {
-        List<Currency> currencies = currencyManager.getAllCurrencies();
+        List<Currency> currencies = currencyManager.getCurrencies(1, "id", "asc").getList();
         for(Currency c : currencies) {
         currencyManager.deleteCurrency(c.getId());
             }
@@ -61,36 +61,24 @@ public class CurrencyManagerImplTest {
     }
     
     @Test
-    public void testCreateCurrency() {
-    	Currency currency = currencyManager.createCurrency("ABC", "ABECE");
-    	assertThat(currency.getId()).isNotNull();
-    }
-	
-	@Test
-    public void testUpdateCurrency() {
-    	Currency currency = currencyManager.createCurrency("CDE", "CEDEE");
-    	assertThat(currency.getId()).isNotNull();
+    public void testSaveGetDelete() {
+    	Currency currencyOne = new Currency();
+    	currencyOne.setCode("ABC");
+    	currencyOne.setName("ABECE");
+    	currencyOne = currencyManager.saveCurrency(currencyOne);
+    	assertThat(currencyOne.getId()).isNotNull();
     	
-    	currency = currencyManager.updateCurrency(currency.getId(), "EDC", null);
-    	assertThat(currency.getCode()).isEqualTo("EDC");
-    	assertThat(currency.getName()).isNull();;
+    	Currency currencyTwo = new Currency();
+        currencyTwo.setCode("DEF");
+        currencyTwo.setName("DEEF");
+        currencyTwo = currencyManager.saveCurrency(currencyTwo);
+        assertThat(currencyTwo.getId()).isNotNull();
+        
+        currencyManager.deleteCurrency(currencyOne.getId());
+        PaginatedListWrapper<Currency> wrapper = currencyManager.getCurrencies(1, "id", "asc");
+        assertThat(wrapper.getList().size()).isEqualTo(1);
+        assertThat(wrapper.getList().get(0)).isEqualTo(currencyTwo);
     }
-	
-	@Test
-	public void testDeleteCurrency() {
-		Currency currency = currencyManager.createCurrency("XYZ", null);
-    	
-		currencyManager.deleteCurrency(currency.getId());
-		assertThat(currencyManager.getAllCurrencies()).doesNotContain(currency);
-		assertThat(currencyManager.getAllCurrencies().size()).isEqualTo(0);
-	}
-	
-	@Test
-	public void testGetAllCurrencies() {
-		Currency currency = currencyManager.createCurrency("AAA", null);
-		assertThat(currencyManager.getAllCurrencies()).isNotEmpty().contains(currency);
-		assertThat(currencyManager.getAllCurrencies().size()).isEqualTo(1);
-	}
 	
     @Test
     @RunAsClient

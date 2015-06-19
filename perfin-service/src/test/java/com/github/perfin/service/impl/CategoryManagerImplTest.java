@@ -21,8 +21,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 
-import static org.mockito.Mockito.*;
-
 import org.mockito.MockitoAnnotations;
 
 import com.github.perfin.model.entity.Category;
@@ -79,7 +77,10 @@ public class CategoryManagerImplTest {
 	public void createUser() {
 	    
 	    if(user == null) {
-	        Currency cur = currencyManager.createCurrency("CUR", "CURRENCY");
+	        Currency cur = new Currency();
+	        cur.setCode("CUR");
+	        cur.setName("CURRENCY");
+	        cur = currencyManager.saveCurrency(cur);
 	        User u = new User();
 	        u.setUserName("john tester");
 	        u.setDefaultCurrency(cur);
