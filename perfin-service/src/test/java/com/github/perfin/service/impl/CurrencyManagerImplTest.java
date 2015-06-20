@@ -115,7 +115,7 @@ public class CurrencyManagerImplTest {
             currencyManager.saveCurrency(currency);
             fail("Code is not uppercase ond of length 3");
         } catch(EJBException ejbe) { 
-            assertThat(ejbe.getCause()).isInstanceOf(IllegalArgumentException.class);
+            assertThat(ejbe.getCause()).isInstanceOf(RollbackException.class);
         }
         
         currency.setCode(null);
@@ -123,7 +123,7 @@ public class CurrencyManagerImplTest {
             currencyManager.saveCurrency(currency);
             fail("Code is not uppercase ond of length 3");
         } catch(EJBException ejbe) { 
-            assertThat(ejbe.getCause()).isInstanceOf(IllegalArgumentException.class);
+            assertThat(ejbe.getCause()).isInstanceOf(RollbackException.class);
         }
         
         currency.setCode("XXX");

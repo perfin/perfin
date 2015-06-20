@@ -129,4 +129,16 @@ public class ResourceManagerImpl implements ResourceManager {
     void setEntityManager(EntityManager em) {
         this.em = em;
     }
+
+    @Override
+    public Resource getResourceById(Long id) {
+        Resource res = em.find(Resource.class, id);
+        
+        if(res != null) {
+            if(!res.getUser().equals(userManager.getCurrentUser())) {
+                return null;
+            }
+        }
+        return res;
+    }
 }

@@ -28,4 +28,10 @@ public interface ResourceManager {
     
     PaginatedListWrapper<Resource> getUserResources(Integer page, String sortFields, String sortDirections);
 
+    /**
+     * 
+     * @param id
+     * @return null if resource doesn't belong to user
+     */
+    Resource getResourceById(Long id);
 }
