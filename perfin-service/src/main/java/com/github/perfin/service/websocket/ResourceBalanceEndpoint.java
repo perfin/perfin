@@ -1,6 +1,5 @@
 package com.github.perfin.service.websocket;
 
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -16,10 +15,10 @@ import javax.websocket.server.ServerEndpoint;
 import com.github.perfin.model.entity.Resource;
 import com.github.perfin.service.api.ResourceManager;
 
-@ServerEndpoint("/ballances")
-public class ResourceBallanceEndpoint {
+@ServerEndpoint("/balances")
+public class ResourceBalanceEndpoint {
     
-    private static final Logger LOG = Logger.getLogger(ResourceBallanceEndpoint.class.getName());
+    private static final Logger LOG = Logger.getLogger(ResourceBalanceEndpoint.class.getName());
     private static Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
 
     @Inject
@@ -28,7 +27,7 @@ public class ResourceBallanceEndpoint {
     /**
      * 
      * @param message format RESOURCE:{id}
-     * @return message in format {resourceId: id, currentBallance:<ballance>}
+     * @return message in format {resourceId: id, currentBalance:<balance>}
      *          {} - if no such resource exist or resource doesn't belong to user
      */
     @OnMessage
@@ -44,7 +43,7 @@ public class ResourceBallanceEndpoint {
                 return "{}";
             }
             
-            return "{resource: " + resId + ", currentBallance: " + res.getCurrentBalance() +"}";
+            return "{resource: " + resId + ", currentBalance: " + res.getCurrentBalance() +"}";
         } else {
             return "{}";
         }
