@@ -25,6 +25,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>7.0</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.10</version>
@@ -37,6 +43,11 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.0</version>
+            </dependency>
+            <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-entitymanager</artifactId>
                 <version>4.3.10.Final</version>
@@ -45,6 +56,12 @@
                 <groupId>org.jboss.arquillian.core</groupId>
                 <artifactId>arquillian-core-api</artifactId>
                 <version>${version.org.jboss.arquillian}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.extension</groupId>
+                <artifactId>arquillian-transaction-jta</artifactId>
+                <version>1.0.1.Final</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -61,9 +78,28 @@
             </dependency>
             <dependency>
                 <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-jackson-provider</artifactId>
+                <version>${version.org.jboss.resteasy}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-jaxrs</artifactId>
+                <version>${version.org.jboss.resteasy}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
                 <artifactId>resteasy-json-p-provider</artifactId>
                 <version>${version.org.jboss.resteasy}</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.shrinkwrap.resolver</groupId>
+                <artifactId>shrinkwrap-resolver-depchain</artifactId>
+                <version>2.1.1</version>
+                <scope>test</scope>
+                <type>pom</type>
             </dependency>
             <dependency>
                 <groupId>org.jboss.spec</groupId>
@@ -73,12 +109,23 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
+                <groupId>org.jboss.spec.javax.websocket</groupId>
+                <artifactId>jboss-websocket-api_1.0_spec</artifactId>
+                <version>1.0.0.Final</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>1.9.5</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.wildfly</groupId>
                 <artifactId>wildfly-arquillian-container-managed</artifactId>
                 <version>8.2.0.Final</version>
                 <scope>test</scope>
             </dependency>
-		    <dependency>
+            <dependency>
                 <groupId>org.jboss.arquillian.extension</groupId>
                 <artifactId>arquillian-transaction-bom</artifactId>
                 <version>1.0.1.Final</version>
