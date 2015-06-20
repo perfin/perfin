@@ -5,8 +5,21 @@ import java.util.Map;
 
 public class ResourceBalance implements Serializable {
 
+    /**
+     * A map containing resource name as a key and current resource balance as a value. All balances are converted to
+     * user default currency, rounded on two decimal points and stored as strings.
+     */
     private final Map<String, String> balances;
+
+    /**
+     * A sum of all current resource balances converted to user default currency, rounded on two decimal points and
+     * stored as a string.
+     */
     private final String totalAmount;
+
+    /**
+     * User default currency code in which all amounts are listed.
+     */
     private final String currencyCode;
 
     public ResourceBalance(Map<String, String> balances, String totalAmount, String currencyCode) {
