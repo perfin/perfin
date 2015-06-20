@@ -7,6 +7,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -23,7 +24,20 @@ public class ExchangeRatesProviderTest {
     @Deployment
     public static Archive<?> getDeployment() {
         return ShrinkWrap.create(WebArchive.class)
-                .addPackages(true, ExchangeRatesProvider.class.getPackage(), Currency.class.getPackage());
+                .addPackages(true, ExchangeRatesProvider.class.getPackage(), Currency.class.getPackage())
+                .addPackages(true, "org.assertj.core");
+    }
+
+    @Ignore
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidBase() throws ExecutionException, InterruptedException {
+        BigDecimal btc = rates.getLatestRatio("BTC", "EUR").get();
+    }
+
+    @Ignore
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidTarget() throws ExecutionException, InterruptedException {
+        BigDecimal btc = rates.getLatestRatio("EUR", "BTC").get();
     }
 
     @Test
@@ -32,7 +46,7 @@ public class ExchangeRatesProviderTest {
         Assertions.assertThat(usd).isBetween(BigDecimal.valueOf(0.5), BigDecimal.valueOf(1.5));
 
         BigDecimal czk = rates.getLatestRatio("EUR", "CZK").get();
-        Assertions.assertThat(usd).isBetween(BigDecimal.valueOf(25), BigDecimal.valueOf(30));
+        Assertions.assertThat(czk).isBetween(BigDecimal.valueOf(25), BigDecimal.valueOf(30));
     }
 
 }
