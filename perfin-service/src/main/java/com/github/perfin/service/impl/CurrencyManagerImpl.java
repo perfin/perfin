@@ -52,15 +52,9 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
     @POST
     @Override
     public Currency saveCurrency(Currency currency) {
-        if(currency == null || currency.getCode() == null) {
-            throw new IllegalArgumentException("Null instance can't be saved"
-                    + "and currency code can't be null");
+        if(currency == null) {
+            throw new IllegalArgumentException("Null instance can't be saved");
         }
-        if(!StringUtils.isAllUpperCase(currency.getCode())) {
-            throw new IllegalArgumentException("Currency code must be uppercase. " +
-                    "But was: " + currency.getCode());
-        }
-        
         try{
             if (currency.getId() == null) {
                 return createCurrency(currency.getCode(), currency.getName());

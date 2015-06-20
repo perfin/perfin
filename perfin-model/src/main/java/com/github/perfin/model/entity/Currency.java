@@ -5,8 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
-
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import java.io.Serializable;
 
@@ -22,7 +23,9 @@ public class Currency implements Serializable {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    @Length(min=3, max=3, message="Currency Code must be of length: 3")
+    @Pattern(regexp="[A-Z][A-Z][A-Z]", message="Code must be three alphabetical uppercases")
+    @NotNull
+    @Size(min=3, max=3, message="Currency Code must be of length: 3")
     private String code;
 
     @Column
