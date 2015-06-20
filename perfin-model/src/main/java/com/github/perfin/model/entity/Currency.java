@@ -23,8 +23,8 @@ public class Currency implements Serializable {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    @NotNull(message="mesage code can't be null")
     @Pattern(regexp="[A-Z][A-Z][A-Z]", message="Code must be three alphabetical uppercases")
-    @NotNull
     @Size(min=3, max=3, message="Currency Code must be of length: 3")
     private String code;
 

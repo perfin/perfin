@@ -7,8 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.Length;
+import javax.validation.constraints.Size;
 
 import java.io.Serializable;
 
@@ -24,7 +23,8 @@ public class Category implements Serializable {
     private Long id;
 
     @Column(nullable = false)
-    @Length(min=1, message="Name of category can't be empty")
+    @NotNull(message="category name can't be null")
+    @Size(min=1, message="Name of category can't be empty")
     private String name;
 
     @ManyToOne(optional=false)

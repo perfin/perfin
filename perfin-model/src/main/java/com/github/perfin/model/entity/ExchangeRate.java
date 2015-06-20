@@ -4,6 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -17,15 +19,19 @@ public class ExchangeRate implements Serializable {
     private Long id;
 
     @Column(nullable = false)
+    @NotNull(message="origin currency can't be null")
     private Currency origin;
 
     @Column(nullable = false)
+    @NotNull(message="target currency can't be null")
     private Currency target;
 
     @Column(nullable = false)
+    @NotNull(message="ratio can't be null")
     private BigDecimal ratio;
 
     @Column(nullable = false)
+    @NotNull(message="date can't be null")
     private LocalDate date;
 
     public Long getId() {
