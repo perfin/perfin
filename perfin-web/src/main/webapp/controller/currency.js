@@ -1,5 +1,3 @@
-var app = angular.module('perfin', ['ngResource', 'ngGrid', 'ui.bootstrap']);
-
 app.controller('currencyListController', function ($scope, $rootScope, currencyService) {
     // Initialize required information: sorting, the first page to show and the grid options.
     $scope.sortInfo = {fields: ['id'], directions: ['asc']};
@@ -122,34 +120,6 @@ app.controller('currencyFormController', function ($scope, $rootScope, currencyS
                 $rootScope.$broadcast('error');
             });
     });
-});
-
-// Create a controller with name alertMessagesController to bind to the feedback messages section.
-app.controller('alertMessagesController', function ($scope) {
-    // Picks up the event to display a saved message.
-    $scope.$on('currencySaved', function () {
-        $scope.alerts = [
-            { type: 'success', msg: 'Record saved successfully!' }
-        ];
-    });
-
-    // Picks up the event to display a deleted message.
-    $scope.$on('currencyDeleted', function () {
-        $scope.alerts = [
-            { type: 'success', msg: 'Record deleted successfully!' }
-        ];
-    });
-
-    // Picks up the event to display a server error message.
-    $scope.$on('error', function () {
-        $scope.alerts = [
-            { type: 'danger', msg: 'There was a problem on the server!' }
-        ];
-    });
-
-    $scope.closeAlert = function (index) {
-        $scope.alerts.splice(index, 1);
-    };
 });
 
 // Service that provides currencies operations

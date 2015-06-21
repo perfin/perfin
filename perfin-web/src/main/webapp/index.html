@@ -4,100 +4,34 @@
     <meta charset="UTF-8">
     <title>PerFin</title>
 
-    <link rel="stylesheet" href="lib/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="lib/css/ng-grid.min.css" />
+    <link rel="stylesheet" href="lib/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="lib/css/ng-grid.min.css"/>
 
     <link rel="stylesheet" type="text/css" href="style.css"/>
 
     <script src="lib/jquery.min.js"></script>
     <script src="lib/angular.min.js"></script>
     <script src="lib/angular-resource.min.js"></script>
+    <script src="lib/angular-route.min.js"></script>
     <script src="lib/ng-grid-2.0.11.min.js"></script>
     <script src="lib/ui-bootstrap-tpls.min.js"></script>
 
+    <script src="common.js"></script>
     <script src="controller/currency.js"></script>
   </head>
   <body>
+    <h1>PerFin</h1>
+
     <ul class="menu">
-      <li><a href="#/statistics">Statistics</a></li>
-      <li><a href="#/transactions">Transactions</a></li>
-      <li><a href="#/categories">Categories</a></li>
-      <li><a href="#/resources">Resources</a></li>
-      <li><a href="#/currencies">Currencies</a></li> <!-- admin only -->
+      <li><a href="#/overview">Overview</a></li>
+      <li><a href="#/transaction">Transactions</a></li>
+      <li><a href="#/category">Categories</a></li>
+      <li><a href="#/resource">Resources</a></li>
+      <li><a href="#/currency">Currencies</a></li>
       <li><a href="logout">Logout</a></li>
     </ul>
+
     <div ng-view></div>
-
-    <!-- Specify a Angular controller script that binds Javascript variables to the feedback messages.-->
-    <div class="message" ng-controller="alertMessagesController">
-      <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
-    </div>
-
-    <div class="grid" ng-controller="currencyListController">
-      <div>
-        <h3>Currencies</h3>
-      </div>
-
-      <!-- Binds the grid component to be displayed. -->
-      <div class="gridStyle" ng-grid="gridOptions"></div>
-
-      <!--  Bind the pagination component to be displayed. -->
-      <pagination direction-links="true" boundary-links="true"
-          total-items="currencies.totalResults" items-per-page="currencies.pageSize"
-          ng-model="currencies.currentPage" ng-change="refreshGrid()">
-      </pagination>
-    </div>
-
-    <div class="form" ng-controller="currencyFormController">
-      <!-- Verify currency, if there is no id present, that we are Adding a currency -->
-      <div ng-if="currency.id == null">
-        <h3>Add currency</h3>
-      </div>
-      <!-- Otherwise it's an Edit -->
-      <div ng-if="currency.id != null">
-        <h3>Edit currency</h3>
-      </div>
-
-      <div>
-        <!-- Specify the function to be called on submit and disable HTML5 validation, since we're using Angular validation-->
-        <form name="currencyForm" ng-submit="updateCurrency()" novalidate>
-
-          <!-- Display an error if the input is invalid and is dirty (only when someone changes the value) -->
-          <div class="form-group" ng-class="{'has-error' : currencyForm.code.$invalid && currencyForm.code.$dirty}">
-            <label for="code">Code:</label>
-            <!-- Display a check when the field is valid and was modified -->
-            <span ng-class="{'glyphicon glyphicon-ok' : currencyForm.code.$valid && currencyForm.code.$dirty}"></span>
-
-            <input id="code" name="code" type="text" class="form-control" maxlength="3"
-                ng-model="currency.code" required ng-minlength="3" ng-maxlength="3"/>
-
-            <!-- Validation messages to be displayed on required, minlength and maxlength -->
-            <p class="help-block" ng-show="currencyForm.code.$error.required">You must enter currency code.</p>
-            <p class="help-block" ng-show="currencyForm.code.$error.minlength">Code must consist of exactly 3 characters.</p>
-            <p class="help-block" ng-show="currencyForm.code.$error.maxlength">Code must consist of exactly 3 characters.</p>
-          </div>
-
-          <!-- Display an error if the input is invalid and is dirty (only when someone changes the value) -->
-          <div class="form-group" ng-class="{'has-error' : currencyForm.name.$invalid && currencyForm.name.$dirty}">
-            <label for="name">Name:</label>
-            <!-- Display a check when the field is valid and was modified -->
-            <span ng-class="{'glyphicon glyphicon-ok' : currencyForm.name.$valid && currencyForm.name.$dirty}"></span>
-
-            <input id="name" name="name" type="text" class="form-control" maxlength="255" ng-model="currency.name"
-                ng-maxlength="255"/>
-
-            <!-- Validation messages to be displayed on required, minlength and maxlength -->
-            <p class="help-block" ng-show="currencyForm.name.$error.maxlength">Name cannot be longer than 255 characters.</p>
-          </div>
-
-          <!-- Form buttons. The 'Save' button is only enabled when the form is valid. -->
-          <div class="buttons">
-            <button type="button" class="btn btn-primary" ng-click="clearForm()">Clear</button>
-            <button type="submit" class="btn btn-primary" ng-disabled="currencyForm.$invalid">Save</button>
-          </div>
-        </form>
-      </div>
-    </div>
 
   </body>
 </html>
