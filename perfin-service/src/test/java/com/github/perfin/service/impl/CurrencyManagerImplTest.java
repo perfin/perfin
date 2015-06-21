@@ -155,7 +155,7 @@ public class CurrencyManagerImplTest {
         Entity<Currency> currency = Entity.entity(unstored, MediaType.APPLICATION_JSON);
 
         Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(base.toURI() + "resources/currencies/");
+        WebTarget target = client.target(base.toURI() + "service/currencies/");
         Response response = target.request(MediaType.APPLICATION_JSON).post(currency);
 
         Currency stored = response.readEntity(Currency.class);
@@ -167,7 +167,7 @@ public class CurrencyManagerImplTest {
         PaginatedListWrapper<Currency> wrapper = responseGet.readEntity(PaginatedListWrapper.class);
         assertThat(wrapper.getList().size()).isEqualTo(1);
 
-        WebTarget targetDelete = client.target(base.toURI() + "resources/currencies/"
+        WebTarget targetDelete = client.target(base.toURI() + "service/currencies/"
                 + stored.getId() + "/");
         targetDelete.request().delete();
 

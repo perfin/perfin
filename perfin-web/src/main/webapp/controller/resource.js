@@ -136,5 +136,5 @@ app.controller('resourceFormController', function ($scope, $rootScope, resourceS
 
 // Service that provides resources operations
 app.factory('resourceService', function ($resource) {
-    return $resource('resources/resources/:id');
+    return $resource('service/resources/:id');
 });

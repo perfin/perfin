@@ -16,7 +16,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Stateless
-@ApplicationPath("/resources")
+@ApplicationPath("/service")
 @Path("currencies")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)

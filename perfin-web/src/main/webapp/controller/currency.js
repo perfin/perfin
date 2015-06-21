@@ -124,5 +124,5 @@ app.controller('currencyFormController', function ($scope, $rootScope, currencyS
 
 // Service that provides currencies operations
 app.factory('currencyService', function ($resource) {
-    return $resource('resources/currencies/:id');
+    return $resource('service/currencies/:id');
 });

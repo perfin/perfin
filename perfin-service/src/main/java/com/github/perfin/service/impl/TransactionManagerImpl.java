@@ -21,7 +21,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Stateless
-@ApplicationPath("/resources")
+@ApplicationPath("/service")
 @Path("transactions")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
