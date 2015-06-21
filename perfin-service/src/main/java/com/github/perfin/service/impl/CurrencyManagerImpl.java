@@ -10,13 +10,9 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.RollbackException;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
-
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.List;
 
 @Stateless
@@ -54,16 +50,16 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
     @POST
     @Override
     public Currency saveCurrency(Currency currency) {
-        if(currency == null) {
+        if (currency == null) {
             throw new IllegalArgumentException("Null instance can't be saved");
         }
-        try{
+        try {
             if (currency.getId() == null) {
                 return createCurrency(currency.getCode(), currency.getName());
             } else {
                 return updateCurrency(currency.getId(), currency.getCode(), currency.getName());
             }
-        }catch(EJBTransactionRolledbackException e) {
+        } catch (EJBTransactionRolledbackException e) {
             throw new IllegalArgumentException("Unabe to save currency: " + currency, e);
         }
     }
@@ -75,6 +71,12 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
         Currency currency = em.find(Currency.class, id);
 
         em.remove(currency);
+    }
+
+    @GET
+    @Path("{id}")
+    public Currency getCurrency(@PathParam("id") Long id) {
+        return em.find(Currency.class, id);
     }
 
     private Integer countCurrencies() {
