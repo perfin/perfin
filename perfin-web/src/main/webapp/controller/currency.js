@@ -30,7 +30,7 @@ app.controller('currencyListController', function ($scope, $rootScope, currencyS
     // Refresh the grid, calling the appropriate rest method.
     $scope.refreshGrid = function () {
         var listCurrencyArgs = {
-            //page: $scope.currencies.currentPage,
+            page: $scope.currencies.currentPage,
             sortFields: $scope.sortInfo.fields[0],
             sortDirections: $scope.sortInfo.directions[0]
         };

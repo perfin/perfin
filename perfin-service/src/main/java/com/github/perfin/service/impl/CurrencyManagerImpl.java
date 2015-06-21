@@ -107,7 +107,7 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
         paginatedListWrapper.setCurrentPage(page);
         paginatedListWrapper.setSortFields(sortFields);
         paginatedListWrapper.setSortDirections(sortDirections);
-        paginatedListWrapper.setPageSize(5);
+        paginatedListWrapper.setPageSize(10);
         return findCurrencies(paginatedListWrapper);
     }
 
