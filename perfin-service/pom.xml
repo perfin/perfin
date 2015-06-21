@@ -84,6 +84,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>org.jboss.spec.javax.servlet</groupId>
+            <artifactId>jboss-servlet-api_3.0_spec</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jboss.spec.javax.websocket</groupId>
             <artifactId>jboss-websocket-api_1.0_spec</artifactId>
         </dependency>
@@ -96,11 +100,6 @@
             <groupId>org.wildfly</groupId>
             <artifactId>wildfly-arquillian-container-managed</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.spec.javax.servlet</groupId>
-            <artifactId>jboss-servlet-api_3.0_spec</artifactId>
-            <version>1.0.2.Final</version>
         </dependency>
     </dependencies>
 
