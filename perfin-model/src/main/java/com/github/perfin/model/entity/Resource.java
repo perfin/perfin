@@ -21,7 +21,8 @@ public class Resource implements Serializable {
     @Length(min = 1, message = "Name of resource can't be empty")
     private String name;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(targetEntity = Currency.class)
+    @JoinColumn(name = "currency", nullable = false)
     @NotNull(message = "Resource mus have specified currency")
     private Currency currency;
 
@@ -29,7 +30,8 @@ public class Resource implements Serializable {
     @NotNull(message = "Resource can't have null balance")
     private BigDecimal balance;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(name = "user", nullable = false)
     @NotNull(message = "Resource must belong to some user")
     private User user;
 

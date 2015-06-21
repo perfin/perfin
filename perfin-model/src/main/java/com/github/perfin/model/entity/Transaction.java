@@ -1,22 +1,16 @@
 package com.github.perfin.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
-@NamedQueries(value={
-	@NamedQuery(name="getTransactionsByDateRange", query="SELECT t FROM Transaction t WHERE t.date >= :startDate AND t.date <= :endDate"),
-	@NamedQuery(name="getTransactionsByCategory", query="SELECT t FROM Transaction t WHERE t.category =  :category"),
-	@NamedQuery(name="getTransactionsByResource", query="SELECT t FROM Transaction t WHERE t.resource = :resource")
+@NamedQueries(value = {
+        @NamedQuery(name = "getTransactionsByDateRange", query = "SELECT t FROM Transaction t WHERE t.date >= :startDate AND t.date <= :endDate"),
+        @NamedQuery(name = "getTransactionsByCategory", query = "SELECT t FROM Transaction t WHERE t.category =  :category"),
+        @NamedQuery(name = "getTransactionsByResource", query = "SELECT t FROM Transaction t WHERE t.resource = :resource")
 })
 public class Transaction implements Serializable {
 
@@ -27,20 +21,22 @@ public class Transaction implements Serializable {
     @Column
     private Long id;
 
-    @ManyToOne(optional=false)
-    @NotNull(message="transaction must belong to resource")
+    @ManyToOne(targetEntity = Resource.class)
+    @JoinColumn(name = "resource", nullable = false)
+    @NotNull(message = "transaction must belong to resource")
     private Resource resource;
 
-    @ManyToOne(optional=false)
-    @NotNull(message="transaction must belong to category")
+    @ManyToOne(targetEntity = Category.class)
+    @JoinColumn(name = "category", nullable = false)
+    @NotNull(message = "transaction must belong to category")
     private Category category;
 
     @Column(nullable = false)
-    @NotNull(message="amount of transaction can't be null")
+    @NotNull(message = "amount of transaction can't be null")
     private BigDecimal amount;
 
     @Column(nullable = false)
-    @NotNull(message="date of transaction can't be null")
+    @NotNull(message = "date of transaction can't be null")
     private LocalDate date;
 
     @Column

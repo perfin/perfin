@@ -21,7 +21,8 @@ public class Category implements Serializable {
     @Size(min = 1, message = "Name of category can't be empty")
     private String name;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(targetEntity = User.class)
+    @JoinColumn(name = "user", nullable = false)
     @NotNull(message = "Category must belong to some user")
     private User user;
 

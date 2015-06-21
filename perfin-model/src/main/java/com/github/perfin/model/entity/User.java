@@ -1,9 +1,6 @@
 package com.github.perfin.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -17,7 +14,8 @@ public class User implements Serializable {
     @Column(nullable = false, unique = true)
     private String userName;
 
-    @Column(nullable = false)
+    @ManyToOne(targetEntity = Currency.class)
+    @JoinColumn(name = "currency", nullable = false)
     private Currency defaultCurrency;
 
     public Long getId() {
