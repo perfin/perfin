@@ -1,0 +1,84 @@
+<!-- Specify a Angular controller script that binds Javascript variables to the feedback messages.-->
+<div class="message" ng-controller="alertMessagesController">
+  <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+</div>
+
+<div class="grid" ng-controller="resourceListController">
+  <div>
+    <h3>Resources</h3>
+  </div>
+
+  <!-- Binds the grid component to be displayed. -->
+  <div class="gridStyle" ng-grid="gridOptions"></div>
+
+  <!--  Bind the pagination component to be displayed. -->
+  <pagination direction-links="true" boundary-links="true"
+      total-items="resources.totalResults" items-per-page="resources.pageSize"
+      ng-model="resources.currentPage" ng-change="refreshGrid()">
+  </pagination>
+</div>
+
+<div class="form" ng-controller="resourceFormController">
+  <!-- Verify resource, if there is no id present, that we are Adding a resource -->
+  <div ng-if="resource.id == null">
+    <h3>Add resource</h3>
+  </div>
+  <!-- Otherwise it's an Edit -->
+  <div ng-if="resource.id != null">
+    <h3>Edit resource</h3>
+  </div>
+
+  <div>
+    <!-- Specify the function to be called on submit and disable HTML5 validation, since we're using Angular validation-->
+    <form name="resourceForm" ng-submit="updateResource()" novalidate>
+
+      <!-- Display an error if the input is invalid and is dirty (only when someone changes the value) -->
+      <div class="form-group" ng-class="{'has-error' : resourceForm.name.$invalid && resourceForm.name.$dirty}">
+        <label for="name">Name:</label>
+        <!-- Display a check when the field is valid and was modified -->
+        <span ng-class="{'glyphicon glyphicon-ok' : resourceForm.name.$valid && resourceForm.name.$dirty}"></span>
+
+        <input id="name" name="name" type="text" class="form-control" maxlength="255" required ng-model="resource.name"
+            ng-maxlength="255"/>
+
+        <!-- Validation messages to be displayed on required, minlength and maxlength -->
+        <p class="help-block" ng-show="resourceForm.name.$error.maxlength">Name cannot be longer than 255
+          characters.</p>
+      </div>
+
+      <!-- Display an error if the input is invalid and is dirty (only when someone changes the value) -->
+      <div class="form-group" ng-class="{'has-error' : resourceForm.currency.$invalid && resourceForm.currency.$dirty}">
+        <label for="currency">Currency:</label>
+        <!-- Display a check when the field is valid and was modified -->
+        <span
+            ng-class="{'glyphicon glyphicon-ok' : resourceForm.currency.$valid && resourceForm.currency.$dirty}"></span>
+
+        <select id="currency" name="currency" required
+            ng-model="selectedCurrency" ng-options="currency.id as currency.code for currency in currencies"></select>
+
+        <!-- Validation messages to be displayed on required -->
+        <p class="help-block" ng-show="resourceForm.currency.$error.required">You must enter resource currency.</p>
+      </div>
+
+      <!-- Display an error if the input is invalid and is dirty (only when someone changes the value) -->
+      <div class="form-group" ng-class="{'has-error' : resourceForm.balance.$invalid && resourceForm.balance.$dirty}">
+        <label for="balance">Balance:</label>
+        <!-- Display a check when the field is valid and was modified -->
+        <span ng-class="{'glyphicon glyphicon-ok' : resourceForm.name.$valid && resourceForm.name.$dirty}"></span>
+
+        <input id="balance" name="balance" type="number" class="form-control" required
+            ng-model="resource.balance"/>
+
+        <!-- Validation messages to be displayed on required, minlength and maxlength -->
+
+
+      </div>
+
+      <!-- Form buttons. The 'Save' button is only enabled when the form is valid. -->
+      <div class="buttons">
+        <button type="button" class="btn btn-primary" ng-click="clearForm()">Clear</button>
+        <button type="submit" class="btn btn-primary" ng-disabled="resourceForm.$invalid">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
