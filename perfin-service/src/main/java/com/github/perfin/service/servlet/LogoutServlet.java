@@ -18,8 +18,6 @@ public class LogoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
         HttpSession session= req.getSession();
         session.invalidate();
-        RequestDispatcher rd = req.getRequestDispatcher("/");
-        System.out.println("Servlet called!");
-        rd.forward(req,res);
+        res.sendRedirect("index.html");
     }
 }
