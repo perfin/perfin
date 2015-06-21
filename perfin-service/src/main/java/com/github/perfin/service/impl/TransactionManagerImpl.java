@@ -58,20 +58,20 @@ public class TransactionManagerImpl implements TransactionManager {
 		if(oldResource.getId().equals(transaction.getResource().getId())) {
 		    BigDecimal oldAmount = old.getAmount();
 		    BigDecimal newAmount = transaction.getAmount();
-		    BigDecimal oldBallance = oldResource.getCurrentBalance();
+		    BigDecimal oldBallance = oldResource.getBalance();
 		    
-		    oldResource.setCurrentBalance(oldBallance.subtract(oldAmount).add(newAmount));
+		    oldResource.setBalance(oldBallance.subtract(oldAmount).add(newAmount));
 		    resourceManager.saveResource(oldResource);
 		} else {
 		    BigDecimal oldAmount = old.getAmount();
             BigDecimal newAmount = transaction.getAmount();
-            BigDecimal oldBallance = oldResource.getCurrentBalance();
+            BigDecimal oldBalance = oldResource.getBalance();
             
-            oldResource.setCurrentBalance(oldBallance.subtract(oldAmount));
+            oldResource.setBalance(oldBalance.subtract(oldAmount));
             resourceManager.saveResource(oldResource);
             
             Resource newResource = transaction.getResource();
-            newResource.setCurrentBalance(newResource.getCurrentBalance().add(newAmount));
+            newResource.setBalance(newResource.getBalance().add(newAmount));
             resourceManager.saveResource(newResource);
 		}
 		
@@ -92,8 +92,8 @@ public class TransactionManagerImpl implements TransactionManager {
 		Transaction transaction = em.find(Transaction.class, id);
 		
 		Resource resource = transaction.getResource();
-		BigDecimal currentBalance = resource.getCurrentBalance();
-		resource.setCurrentBalance(currentBalance.subtract(transaction.getAmount()));
+		BigDecimal currentBalance = resource.getBalance();
+		resource.setBalance(currentBalance.subtract(transaction.getAmount()));
 		
 		resourceManager.saveResource(resource);
 		

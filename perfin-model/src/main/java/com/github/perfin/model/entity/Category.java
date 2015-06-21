@@ -1,18 +1,12 @@
 package com.github.perfin.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import java.io.Serializable;
 
 @Entity
-@NamedQuery(name="getUserCategories", query="select c from Category c where c.user.id = :userId")
+@NamedQuery(name = "getUserCategories", query = "select c from Category c where c.user.id = :userId")
 public class Category implements Serializable {
 
     private static final long serialVersionUID = -1389340948215708171L;
@@ -23,11 +17,11 @@ public class Category implements Serializable {
     private Long id;
 
     @Column(nullable = false)
-    @NotNull(message="category name can't be null")
-    @Size(min=1, message="Name of category can't be empty")
+    @NotNull(message = "category name can't be null")
+    @Size(min = 1, message = "Name of category can't be empty")
     private String name;
 
-    @ManyToOne(optional=false)
+    @ManyToOne(optional = false)
     @NotNull(message = "Category must belong to some user")
     private User user;
 
@@ -96,7 +90,5 @@ public class Category implements Serializable {
             return false;
         return true;
     }
-    
-    
 
 }

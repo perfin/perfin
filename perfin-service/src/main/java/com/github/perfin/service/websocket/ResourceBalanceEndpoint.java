@@ -43,7 +43,7 @@ public class ResourceBalanceEndpoint {
                 return "{}";
             }
             
-            return "{resource: " + resId + ", currentBalance: " + res.getCurrentBalance() +"}";
+            return "{resource: " + resId + ", currentBalance: " + res.getBalance() +"}";
         } else {
             return "{}";
         }

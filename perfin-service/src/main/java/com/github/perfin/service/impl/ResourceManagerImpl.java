@@ -52,7 +52,7 @@ public class ResourceManagerImpl implements ResourceManager {
 		Resource updated = em.find(Resource.class, resource.getId());
 		updated.setName(resource.getName());
 		updated.setCurrency(resource.getCurrency());
-		updated.setCurrentBalance(resource.getCurrentBalance());
+		updated.setBalance(resource.getBalance());
 		
 		em.merge(resource);
 		
