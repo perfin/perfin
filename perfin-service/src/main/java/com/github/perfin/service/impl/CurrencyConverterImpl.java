@@ -5,6 +5,7 @@ import com.github.perfin.model.entity.ExchangeRate;
 import com.github.perfin.service.api.CurrencyConverter;
 import com.github.perfin.service.rest.ExchangeRatesProvider;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 import java.util.concurrent.ExecutionException;
 
 @Stateless
+@PermitAll
 public class CurrencyConverterImpl implements CurrencyConverter {
 
     @PersistenceContext

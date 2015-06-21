@@ -2,6 +2,7 @@ package com.github.perfin.service.impl;
 
 import java.util.List;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -30,6 +31,7 @@ import com.github.perfin.service.dto.PaginatedListWrapper;
 @Path("resources")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@PermitAll
 public class ResourceManagerImpl implements ResourceManager {
 
 	@PersistenceContext(unitName="primary")

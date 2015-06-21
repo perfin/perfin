@@ -1,5 +1,6 @@
 package com.github.perfin.service.rest;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.AsyncResult;
 import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
@@ -13,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.concurrent.Future;
 
 @Stateless
+@PermitAll
 public class ExchangeRatesProvider {
 
     @Asynchronous

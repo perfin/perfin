@@ -4,6 +4,7 @@ import com.github.perfin.model.entity.Currency;
 import com.github.perfin.service.api.CurrencyManager;
 import com.github.perfin.service.dto.PaginatedListWrapper;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -23,6 +24,7 @@ import java.util.List;
 @Path("currencies")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@PermitAll
 public class CurrencyManagerImpl extends Application implements CurrencyManager {
 
     @PersistenceContext

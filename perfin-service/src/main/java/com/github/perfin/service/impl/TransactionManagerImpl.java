@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.time.LocalDate;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -33,6 +34,7 @@ import com.github.perfin.service.dto.PaginatedListWrapper;
 @Path("transactions")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
+@PermitAll
 public class TransactionManagerImpl implements TransactionManager {
 	
 	@PersistenceContext

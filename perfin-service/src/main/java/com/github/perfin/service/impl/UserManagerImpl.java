@@ -1,5 +1,6 @@
 package com.github.perfin.service.impl;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -10,6 +11,7 @@ import com.github.perfin.service.api.UserManager;
 
 
 @Stateless
+@PermitAll
 public class UserManagerImpl implements UserManager {
 	
 	@PersistenceContext
