@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class ExchangeRate implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private Long id;
 
