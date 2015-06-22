@@ -108,8 +108,16 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
     public PaginatedListWrapper<Currency> getCurrencies(
             @DefaultValue("1") @QueryParam("page") Integer page,
             @DefaultValue("id") @QueryParam("sortFields") String sortFields,
-            @DefaultValue("asc") @QueryParam("sortDirections") String sortDirections) {
+            @DefaultValue("asc") @QueryParam("sortDirections") String sortDirections,
+            @DefaultValue("false") @QueryParam("all") Boolean all) {
         PaginatedListWrapper<Currency> paginatedListWrapper = new PaginatedListWrapper<>();
+
+        if (all) {
+            Query query = em.createQuery("SELECT c FROM Currency c", Currency.class);
+            paginatedListWrapper.setList(query.getResultList());
+            return paginatedListWrapper;
+        }
+
         paginatedListWrapper.setCurrentPage(page);
         paginatedListWrapper.setSortFields(sortFields);
         paginatedListWrapper.setSortDirections(sortDirections);

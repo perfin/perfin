@@ -37,9 +37,10 @@ public interface CurrencyManager {
      * @param page
      * @param sortFields
      * @param sortDirections
+     * @param all if true, all records are returned regardless the pagination options, false by default
      * @return one page of currency records
      */
-    PaginatedListWrapper<Currency> getCurrencies(Integer page, String sortFields, String sortDirections);
+    PaginatedListWrapper<Currency> getCurrencies(Integer page, String sortFields, String sortDirections, Boolean all);
     
     Currency getCurrency(Long id);
     

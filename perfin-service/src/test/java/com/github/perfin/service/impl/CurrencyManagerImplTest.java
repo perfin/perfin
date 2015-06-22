@@ -64,7 +64,7 @@ public class CurrencyManagerImplTest {
     @After
     public void clearRecords() {
         if (currencyManager != null) {
-            List<Currency> currencies = currencyManager.getCurrencies(1, "id", "asc").getList();
+            List<Currency> currencies = currencyManager.getCurrencies(1, "id", "asc", false).getList();
             for (Currency c : currencies) {
                 currencyManager.deleteCurrency(c.getId());
             }
@@ -86,7 +86,7 @@ public class CurrencyManagerImplTest {
         assertThat(currencyTwo.getId()).isNotNull();
 
         currencyManager.deleteCurrency(currencyOne.getId());
-        PaginatedListWrapper<Currency> wrapper = currencyManager.getCurrencies(1, "id", "asc");
+        PaginatedListWrapper<Currency> wrapper = currencyManager.getCurrencies(1, "id", "asc", false);
         assertThat(wrapper.getList().size()).isEqualTo(1);
         assertThat(wrapper.getList().get(0)).isEqualTo(currencyTwo);
     }
@@ -101,7 +101,7 @@ public class CurrencyManagerImplTest {
         updated.setName("Not Nulll Name");
         updated = currencyManager.saveCurrency(updated);
 
-        PaginatedListWrapper<Currency> wrapper = currencyManager.getCurrencies(1, "id", "asc");
+        PaginatedListWrapper<Currency> wrapper = currencyManager.getCurrencies(1, "id", "asc", false);
         assertThat(wrapper.getList().size()).isEqualTo(1);
         assertThat(wrapper.getList().get(0)).isEqualTo(updated);
     }

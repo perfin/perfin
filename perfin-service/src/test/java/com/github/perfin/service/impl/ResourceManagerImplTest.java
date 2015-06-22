@@ -92,7 +92,7 @@ public class ResourceManagerImplTest {
 
     @After
     public void clearRecords() {
-        PaginatedListWrapper<Resource> resources = resourceManager.getUserResources(1, "id", "asc");
+        PaginatedListWrapper<Resource> resources = resourceManager.getUserResources(1, "id", "asc", false);
         for (Resource r : resources.getList()) {
             resourceManager.deleteResource(r.getId());
         }
@@ -115,12 +115,12 @@ public class ResourceManagerImplTest {
 
         assertThat(stored.getId()).isNotNull();
 
-        PaginatedListWrapper<Resource> resources = resourceManager.getUserResources(1, "id", "asc");
+        PaginatedListWrapper<Resource> resources = resourceManager.getUserResources(1, "id", "asc", false);
         assertThat(resources.getList().size()).isEqualTo(1);
         assertThat(resources.getList().get(0)).isEqualTo(stored);
 
         resourceManager.deleteResource(stored.getId());
-        resources = resourceManager.getUserResources(1, "id", "asc");
+        resources = resourceManager.getUserResources(1, "id", "asc", false);
         assertThat(resources.getList().size()).isEqualTo(0);
     }
 

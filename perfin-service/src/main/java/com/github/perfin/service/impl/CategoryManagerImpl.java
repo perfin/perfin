@@ -84,8 +84,17 @@ public class CategoryManagerImpl implements CategoryManager {
     public PaginatedListWrapper<Category> getCategories(
             @DefaultValue("1") @QueryParam("page") Integer page,
             @DefaultValue("id") @QueryParam("sortFields") String sortFields,
-            @DefaultValue("asc") @QueryParam("sortDirections") String sortDirections) {
+            @DefaultValue("asc") @QueryParam("sortDirections") String sortDirections,
+            @DefaultValue("false") @QueryParam("all") Boolean all) {
         PaginatedListWrapper<Category> paginatedListWrapper = new PaginatedListWrapper<>();
+
+        if (all) {
+            Query query = em.createQuery("SELECT COUNT(c.id) FROM Category c WHERE c.user.id = :userId", Category.class);
+            query.setParameter("userId", userManager.getCurrentUser().getId());
+            paginatedListWrapper.setList(query.getResultList());
+            return paginatedListWrapper;
+        }
+
         paginatedListWrapper.setCurrentPage(page);
         paginatedListWrapper.setSortFields(sortFields);
         paginatedListWrapper.setSortDirections(sortDirections);

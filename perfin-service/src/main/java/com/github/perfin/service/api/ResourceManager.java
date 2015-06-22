@@ -28,7 +28,7 @@ public interface ResourceManager {
      */
     void deleteResource(Long id);
     
-    PaginatedListWrapper<Resource> getUserResources(Integer page, String sortFields, String sortDirections);
+    PaginatedListWrapper<Resource> getUserResources(Integer page, String sortFields, String sortDirections, Boolean all);
 
     /**
      * 

@@ -92,7 +92,7 @@ public class CategoryManagerImplTest {
 
     @After
     public void clearRecords() {
-        PaginatedListWrapper<Category> categories = categoryManager.getCategories(1, "id", "asc");
+        PaginatedListWrapper<Category> categories = categoryManager.getCategories(1, "id", "asc", false);
         for (Category c : categories.getList()) {
             categoryManager.deleteCategory(c.getId());
         }
@@ -119,7 +119,7 @@ public class CategoryManagerImplTest {
         Category johnSecondCategory = categoryManager.saveCategory(unstored);
         assertThat(johnSecondCategory.getId()).isNotNull();
 
-        PaginatedListWrapper<Category> categories = categoryManager.getCategories(1, "id", "asc");
+        PaginatedListWrapper<Category> categories = categoryManager.getCategories(1, "id", "asc", false);
         assertThat(categories.getList().size()).isEqualTo(2);
     }
 

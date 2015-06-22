@@ -75,7 +75,7 @@ app.controller('resourceFormController', function ($scope, $rootScope, resourceS
         { id: 1, code: 'EUR' },
         { id: 2, code: 'USD' }
     ];
-    currencyService.get([], function (data) {
+    currencyService.get({all : true}, function (data) {
         $scope.currencies = data.list;
     });
     $scope.selectedCurrency = null;

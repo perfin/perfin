@@ -80,9 +80,18 @@ public class ResourceManagerImpl implements ResourceManager {
     public PaginatedListWrapper<Resource> getUserResources(
             @DefaultValue("1") @QueryParam("page") Integer page,
             @DefaultValue("id") @QueryParam("sortFields") String sortFields,
-            @DefaultValue("asc") @QueryParam("sortDirections") String sortDirections) {
+            @DefaultValue("asc") @QueryParam("sortDirections") String sortDirections,
+            @DefaultValue("false") @QueryParam("all") Boolean all) {
 
         PaginatedListWrapper<Resource> paginatedListWrapper = new PaginatedListWrapper<>();
+
+        if (all) {
+            Query query = em.createQuery("SELECT r FROM Resource r WHERE r.user.id = :userId", Resource.class);
+            query.setParameter("userId", userManager.getCurrentUser().getId());
+            paginatedListWrapper.setList(query.getResultList());
+            return paginatedListWrapper;
+        }
+
         paginatedListWrapper.setCurrentPage(page);
         paginatedListWrapper.setSortFields(sortFields);
         paginatedListWrapper.setSortDirections(sortDirections);
@@ -139,7 +148,7 @@ public class ResourceManagerImpl implements ResourceManager {
     public List<Resource> getUserResources(String userName) {
         Query query = em.createNamedQuery("selectByUserName");
         query.setParameter("userName", userName);
-        
+
         return query.getResultList();
     }
 }

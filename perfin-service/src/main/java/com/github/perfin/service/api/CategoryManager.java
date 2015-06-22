@@ -27,7 +27,7 @@ public interface CategoryManager {
      */
     void deleteCategory(Long id);
     
-    PaginatedListWrapper<Category> getCategories (Integer page, String sortFields, String sortDirections);
+    PaginatedListWrapper<Category> getCategories (Integer page, String sortFields, String sortDirections, Boolean all);
     
     Category getCategory(Long id);
 }
