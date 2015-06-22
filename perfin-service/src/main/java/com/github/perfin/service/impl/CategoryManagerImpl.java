@@ -31,13 +31,13 @@ public class CategoryManagerImpl implements CategoryManager {
     private UserManager userManager;
 
     private Category createCategory(Category category) {
+        category.setUser(userManager.getCurrentUser());
         em.persist(category);
 
         return category;
     }
 
     private Category updateCategory(Category category) {
-
         Category updated = em.find(Category.class, category.getId());
         updated.setName(category.getName());
 
@@ -57,7 +57,7 @@ public class CategoryManagerImpl implements CategoryManager {
 
     @POST
     public Category saveCategory(Category category) {
-        if (category == null || category.getUser() == null) {
+        if (category == null) {
             throw new IllegalArgumentException(category + "can't be saved.");
         }
         if (category.getId() == null) {
@@ -75,7 +75,7 @@ public class CategoryManagerImpl implements CategoryManager {
         if(!category.getUser().equals(userManager.getCurrentUser())) {
             return null;
         }
-        
+
         return category;
     }
 
