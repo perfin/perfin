@@ -89,7 +89,7 @@ public class CategoryManagerImpl implements CategoryManager {
         paginatedListWrapper.setCurrentPage(page);
         paginatedListWrapper.setSortFields(sortFields);
         paginatedListWrapper.setSortDirections(sortDirections);
-        paginatedListWrapper.setPageSize(5);
+        paginatedListWrapper.setPageSize(10);
 
         return findCategories(paginatedListWrapper);
     }

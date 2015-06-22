@@ -156,7 +156,7 @@ public class TransactionManagerImpl implements TransactionManager {
         paginatedListWrapper.setCurrentPage(page);
         paginatedListWrapper.setSortFields(sortFields);
         paginatedListWrapper.setSortDirections(sortDirections);
-        paginatedListWrapper.setPageSize(5);
+        paginatedListWrapper.setPageSize(10);
         return findTransactions(paginatedListWrapper);
     }
 

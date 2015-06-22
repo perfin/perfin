@@ -86,7 +86,7 @@ public class ResourceManagerImpl implements ResourceManager {
         paginatedListWrapper.setCurrentPage(page);
         paginatedListWrapper.setSortFields(sortFields);
         paginatedListWrapper.setSortDirections(sortDirections);
-        paginatedListWrapper.setPageSize(5);
+        paginatedListWrapper.setPageSize(10);
         return findResources(paginatedListWrapper);
     }
 
