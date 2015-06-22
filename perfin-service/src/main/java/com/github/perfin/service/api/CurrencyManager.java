@@ -38,5 +38,7 @@ public interface CurrencyManager {
      * @return one page of currency records
      */
     PaginatedListWrapper<Currency> getCurrencies(Integer page, String sortFields, String sortDirections);
+    
+    Currency getCurrency(Long id);
 
 }

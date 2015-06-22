@@ -69,8 +69,14 @@ public class CategoryManagerImpl implements CategoryManager {
 
     @GET
     @Path("{id}")
+    @Override
     public Category getCategory(@PathParam("id") Long id) {
-        return em.find(Category.class, id);
+        Category category = em.find(Category.class, id);
+        if(!category.getUser().equals(userManager.getCurrentUser())) {
+            return null;
+        }
+        
+        return category;
     }
 
     @Override

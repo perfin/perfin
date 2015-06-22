@@ -135,8 +135,15 @@ public class TransactionManagerImpl implements TransactionManager {
 
     @GET
     @Path("{id}")
+    @Override
     public Transaction getTransaction(@PathParam("id") Long id) {
-        return em.find(Transaction.class, id);
+        
+        Transaction tran =  em.find(Transaction.class, id);
+        if(!tran.getResource().getUser().equals(userManager.getCurrentUser())) {
+            return null;
+        }
+        
+        return tran;
     }
 
     @GET

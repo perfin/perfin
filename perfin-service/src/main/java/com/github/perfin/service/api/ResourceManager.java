@@ -33,5 +33,5 @@ public interface ResourceManager {
      * @param id
      * @return null if resource doesn't belong to user
      */
-    Resource getResourceById(Long id);
+    Resource getResource(Long id);
 }

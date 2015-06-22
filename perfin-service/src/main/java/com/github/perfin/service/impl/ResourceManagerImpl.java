@@ -75,12 +75,6 @@ public class ResourceManagerImpl implements ResourceManager {
         }
     }
 
-    @GET
-    @Path("{id}")
-    public Resource getResource(@PathParam("id") Long id) {
-        return em.find(Resource.class, id);
-    }
-
     @Override
     @GET
     public PaginatedListWrapper<Resource> getUserResources(
@@ -127,8 +121,10 @@ public class ResourceManagerImpl implements ResourceManager {
         this.em = em;
     }
 
+    @GET
+    @Path("{id}")
     @Override
-    public Resource getResourceById(Long id) {
+    public Resource getResource(@PathParam("id") Long id) {
         Resource res = em.find(Resource.class, id);
 
         if (res != null) {

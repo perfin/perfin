@@ -38,7 +38,7 @@ public class ResourceBalanceEndpoint {
                 return "{}";
             }
             Long resId = Long.valueOf(parts[1]);
-            Resource res = resourceManager.getResourceById(resId);
+            Resource res = resourceManager.getResource(resId);
             if(res == null) {
                 return "{}";
             }

@@ -149,5 +149,20 @@ public class ResourceManagerImplTest {
 
         assertThat(res.getBalance()).isEqualTo(BigDecimal.TEN);
     }
+    
+    @Test
+    public void testGetById() {
+        
+        Resource res = new Resource();
+        res.setName("my resource");
+        res.setBalance(BigDecimal.ONE);
+        res.setUser(user);
+
+        res = resourceManager.saveResource(res);
+        
+        Resource found = resourceManager.getResource(res.getId());
+        assertThat(res).isEqualTo(found);
+        
+    }
 
 }

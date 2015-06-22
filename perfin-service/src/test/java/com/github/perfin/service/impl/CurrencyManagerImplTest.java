@@ -162,6 +162,12 @@ public class CurrencyManagerImplTest {
         assertThat(stored.getId()).isNotNull();
         assertThat(stored.getCode()).isEqualTo(unstored.getCode());
         assertThat(stored.getName()).isEqualTo(unstored.getName());
+        
+        WebTarget targetGetById = client.target(base.toURI() + "service/currencies/"
+                + stored.getId() + "/");
+        Response resGetById = targetGetById.request().get();
+        Currency cur = resGetById.readEntity(Currency.class);
+        assertThat(cur).isEqualTo(stored);
 
         Response responseGet = target.request(MediaType.APPLICATION_JSON).get();
         PaginatedListWrapper<Currency> wrapper = responseGet.readEntity(PaginatedListWrapper.class);

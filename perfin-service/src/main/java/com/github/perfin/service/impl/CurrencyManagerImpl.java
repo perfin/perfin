@@ -75,6 +75,7 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
 
     @GET
     @Path("{id}")
+    @Override
     public Currency getCurrency(@PathParam("id") Long id) {
         return em.find(Currency.class, id);
     }

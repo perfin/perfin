@@ -2,11 +2,9 @@ package com.github.perfin.service.impl;
 
 import static org.assertj.core.api.Assertions.*;
 
-import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;

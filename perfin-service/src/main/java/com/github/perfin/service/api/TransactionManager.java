@@ -57,5 +57,7 @@ public interface TransactionManager {
     List<Transaction> getTransactionsByResource(Resource resource);
     
     PaginatedListWrapper<Transaction> getTransactions(Integer page, String sortFields, String sortDirections);
+    
+    Transaction getTransaction(Long id);
 
 }

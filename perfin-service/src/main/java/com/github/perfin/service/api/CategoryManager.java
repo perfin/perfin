@@ -3,8 +3,6 @@ package com.github.perfin.service.api;
 import com.github.perfin.model.entity.Category;
 import com.github.perfin.service.dto.PaginatedListWrapper;
 
-import java.util.List;
-
 /**
  * Manages all categories. User can only manipulate with his own categories.
  */
@@ -30,4 +28,6 @@ public interface CategoryManager {
     void deleteCategory(Long id);
     
     PaginatedListWrapper<Category> getCategories (Integer page, String sortFields, String sortDirections);
+    
+    Category getCategory(Long id);
 }
