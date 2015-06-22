@@ -89,7 +89,7 @@ public class CategoryManagerImpl implements CategoryManager {
         PaginatedListWrapper<Category> paginatedListWrapper = new PaginatedListWrapper<>();
 
         if (all) {
-            Query query = em.createQuery("SELECT COUNT(c.id) FROM Category c WHERE c.user.id = :userId", Category.class);
+            Query query = em.createQuery("SELECT c FROM Category c WHERE c.user.id = :userId", Category.class);
             query.setParameter("userId", userManager.getCurrentUser().getId());
             paginatedListWrapper.setList(query.getResultList());
             return paginatedListWrapper;
