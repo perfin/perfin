@@ -1,0 +1,51 @@
+<div class="grid" ng-controller="categoryListController">
+  <div>
+    <h3>Categories</h3>
+  </div>
+
+  <!-- Binds the grid component to be displayed. -->
+  <div class="gridStyle" ng-grid="gridOptions"></div>
+
+  <!--  Bind the pagination component to be displayed. -->
+  <pagination direction-links="true" boundary-links="true"
+      total-items="categories.totalResults" items-per-page="categories.pageSize"
+      ng-model="categories.currentPage" ng-change="refreshGrid()">
+  </pagination>
+</div>
+
+<div class="form" ng-controller="categoryFormController">
+  <!-- Verify category, if there is no id present, that we are Adding a category -->
+  <div ng-if="category.id == null">
+    <h3>Add category</h3>
+  </div>
+  <!-- Otherwise it's an Edit -->
+  <div ng-if="category.id != null">
+    <h3>Edit category</h3>
+  </div>
+
+  <div>
+    <!-- Specify the function to be called on submit and disable HTML5 validation, since we're using Angular validation-->
+    <form name="categoryForm" ng-submit="updateCategory()" novalidate>
+
+      <!-- Display an error if the input is invalid and is dirty (only when someone changes the value) -->
+      <div class="form-group" ng-class="{'has-error' : categoryForm.name.$invalid && categoryForm.name.$dirty}">
+        <label for="name">Name:</label>
+        <!-- Display a check when the field is valid and was modified -->
+        <span ng-class="{'glyphicon glyphicon-ok' : categoryForm.name.$valid && categoryForm.name.$dirty}"></span>
+
+        <input id="name" name="name" type="text" class="form-control" maxlength="255" ng-model="category.name"
+            ng-maxlength="255"/>
+
+        <!-- Validation messages to be displayed on required, minlength and maxlength -->
+        <p class="help-block" ng-show="categoryForm.name.$error.maxlength">Name cannot be longer than 255
+          characters.</p>
+      </div>
+
+      <!-- Form buttons. The 'Save' button is only enabled when the form is valid. -->
+      <div class="buttons">
+        <button type="button" class="btn btn-primary" ng-click="clearForm()">Clear</button>
+        <button type="submit" class="btn btn-primary" ng-disabled="categoryForm.$invalid">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
