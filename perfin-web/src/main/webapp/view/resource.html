@@ -1,8 +1,3 @@
-<!-- Specify a Angular controller script that binds Javascript variables to the feedback messages.-->
-<div class="message" ng-controller="alertMessagesController">
-  <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
-</div>
-
 <div class="grid" ng-controller="resourceListController">
   <div>
     <h3>Resources</h3>
