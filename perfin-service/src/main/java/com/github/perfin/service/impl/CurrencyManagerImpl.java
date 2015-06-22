@@ -5,6 +5,7 @@ import com.github.perfin.service.api.CurrencyManager;
 import com.github.perfin.service.dto.PaginatedListWrapper;
 
 import javax.annotation.security.PermitAll;
+import javax.batch.runtime.BatchRuntime;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -13,7 +14,9 @@ import javax.persistence.Query;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
+
 import java.util.List;
+import java.util.Properties;
 
 @Stateless
 @ApplicationPath("/service")
@@ -112,6 +115,12 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
         paginatedListWrapper.setSortDirections(sortDirections);
         paginatedListWrapper.setPageSize(10);
         return findCurrencies(paginatedListWrapper);
+    }
+
+    @Override
+    public List<Currency> getCurrencies() {
+        Query query = em.createNamedQuery("getAllCurrencies");
+        return query.getResultList();
     }
 
 }

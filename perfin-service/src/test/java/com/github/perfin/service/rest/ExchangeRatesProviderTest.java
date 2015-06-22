@@ -25,6 +25,7 @@ public class ExchangeRatesProviderTest {
     public static Archive<?> getDeployment() {
         return ShrinkWrap.create(WebArchive.class)
                 .addPackages(true, ExchangeRatesProvider.class.getPackage(), Currency.class.getPackage())
+                .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
                 .addPackages(true, "org.assertj.core");
     }
 

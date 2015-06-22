@@ -6,17 +6,27 @@ import javax.ejb.Asynchronous;
 import javax.ejb.Stateless;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
+
+import com.github.perfin.model.entity.ExchangeRate;
+
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.concurrent.Future;
 
 @Stateless
 @PermitAll
 public class ExchangeRatesProvider {
 
+    @PersistenceContext
+    private EntityManager em;
+    
     @Asynchronous
     public Future<BigDecimal> getLatestRatio(String from, String to) {
         return new AsyncResult<BigDecimal>(getRate(from, to));
@@ -37,4 +47,19 @@ public class ExchangeRatesProvider {
         return number.bigDecimalValue();
     }
 
+    public List<ExchangeRate> getStoredRates(){
+        Query query = em.createQuery("SELECT e from ExchangeRate e");
+        return query.getResultList();
+    }
+    
+    public void saveRate(ExchangeRate rate) {
+        if(rate.getId() == null) {
+            em.persist(rate);
+        } else {
+            ExchangeRate old = em.find(ExchangeRate.class, rate.getId());
+            old.setDate(rate.getDate());
+            old.setRatio(rate.getRatio());
+            em.merge(old);
+        }
+    }
 }

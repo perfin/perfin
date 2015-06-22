@@ -1,5 +1,7 @@
 package com.github.perfin.service.api;
 
+import java.util.List;
+
 import com.github.perfin.model.entity.Currency;
 import com.github.perfin.service.dto.PaginatedListWrapper;
 
@@ -40,5 +42,7 @@ public interface CurrencyManager {
     PaginatedListWrapper<Currency> getCurrencies(Integer page, String sortFields, String sortDirections);
     
     Currency getCurrency(Long id);
+    
+    List<Currency> getCurrencies();
 
 }

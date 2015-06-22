@@ -97,6 +97,10 @@
             <artifactId>jboss-websocket-api_1.0_spec</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.jboss.spec.javax.batch</groupId>
+            <artifactId>jboss-batch-api_1.0_spec</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <scope>test</scope>
