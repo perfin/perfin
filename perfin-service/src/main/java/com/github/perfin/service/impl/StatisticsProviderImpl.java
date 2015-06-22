@@ -37,7 +37,7 @@ public class StatisticsProviderImpl implements StatisticsProvider {
         User currentUser = userManager.getCurrentUser();
         Currency defaultCurrency = currentUser.getDefaultCurrency();
         //incomes
-        Query query = em.createQuery("SELECT T FROM Transaction t WHERE t.date >= :startDate AND t.date <= :endDate AND t.amount > 0 AND t.resource.user = :user");
+        Query query = em.createQuery("SELECT t FROM Transaction t WHERE t.date >= :startDate AND t.date <= :endDate AND t.amount > 0 AND t.resource.user = :user");
         query.setParameter("startDate", startDate);
         query.setParameter("endDate", endDate);
         query.setParameter("user", currentUser);
@@ -82,9 +82,55 @@ public class StatisticsProviderImpl implements StatisticsProvider {
             finalTotalIncomeByCategory.put(entry.getKey().getName(), String.valueOf(totalIncomeByCategory));
         }
 
+        //expenses
+        query = em.createQuery("SELECT t FROM Transaction t WHERE t.date >= :startDate AND t.date <= :endDate AND t.amount < 0 AND t.resource.user = :user");
+        query.setParameter("startDate", startDate);
+        query.setParameter("endDate", endDate);
+        query.setParameter("user", currentUser);
+
+        List<Transaction> expenseTransactions = query.getResultList();
+
+        Map<Category, List<Transaction>> expenseTransactionsByCategory = new HashMap<>();
+
+        //will group transactions by category with correct currency
+        for (Transaction t : expenseTransactions) {
+            Transaction transactionToAdd = new Transaction();
+            //first, we will convert to default currency
+            if (!defaultCurrency.equals(t.getResource().getCurrency())) {
+                transactionToAdd.setAmount(currencyConverter.convert(t.getAmount(), t.getResource().getCurrency(), defaultCurrency));
+            } else {
+                transactionToAdd = t;
+            }
+
+            //group transactions by categories
+            Category category = t.getCategory();
+            if (expenseTransactionsByCategory.containsKey(category)) {
+                expenseTransactionsByCategory.get(category).add(transactionToAdd);
+            } else {
+                List<Transaction> list = new ArrayList<>();
+                list.add(transactionToAdd);
+                expenseTransactionsByCategory.put(category, list);
+            }
+        }
+
+        Map<String, String> finalTotalExpenseByCategory = new HashMap<>();
+        BigDecimal totalExpense = BigDecimal.ZERO;
+
+        for (Map.Entry<Category, List<Transaction>> entry : expenseTransactionsByCategory.entrySet()) {
+            BigDecimal totalExpenseByCategory = BigDecimal.ZERO;
+
+            for (Transaction trans : entry.getValue()) {
+                totalExpenseByCategory.add(trans.getAmount());
+                totalExpense.add(trans.getAmount());
+            }
+
+            totalExpenseByCategory.setScale(2, RoundingMode.CEILING);
+            finalTotalExpenseByCategory.put(entry.getKey().getName(), String.valueOf(totalExpenseByCategory));
+        }
 
 
-        Statistics statistics = null;
+
+        Statistics statistics = new Statistics(startDate.toString(), endDate.toString(), finalTotalIncomeByCategory, String.valueOf(totalIncome), finalTotalExpenseByCategory, String.valueOf(totalExpense), defaultCurrency.getCode());
 
         return statistics;
     }
