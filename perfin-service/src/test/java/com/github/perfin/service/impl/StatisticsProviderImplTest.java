@@ -2,11 +2,21 @@ package com.github.perfin.service.impl;
 
 import com.github.perfin.model.entity.*;
 import com.github.perfin.service.api.CurrencyConverter;
-import com.github.perfin.service.api.CurrencyManager;
 import com.github.perfin.service.api.StatisticsProvider;
 import com.github.perfin.service.api.UserManager;
+import com.github.perfin.service.dto.Statistics;
 import com.github.perfin.service.rest.ExchangeRatesProvider;
-import junit.framework.TestCase;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.transaction.api.annotation.Transactional;
+import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.*;
 
 import javax.inject.Inject;
@@ -15,17 +25,23 @@ import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class StatisticsProviderImplTest extends TestCase {
+@RunWith(Arquillian.class)
+@Transactional
+public class StatisticsProviderImplTest {
 
     @InjectMocks
-    StatisticsProvider statisticsProvider;
-
-    @Spy
-    @PersistenceContext
-    private EntityManager em;
+    StatisticsProvider statisticsProvider = new StatisticsProviderImpl();
 
     @Mock
     private UserManager userManager;
+
+    @Spy
+    @Inject
+    private CurrencyConverter currencyConverter;
+
+    @Spy
+    @PersistenceContext(unitName = "primary")
+    private EntityManager em;
 
     private Currency EUR;
 
@@ -33,7 +49,34 @@ public class StatisticsProviderImplTest extends TestCase {
 
     private User user;
 
+    @Deployment
+    public static Archive<?> getDeployment() {
+        WebArchive war = ShrinkWrap
+                .create(WebArchive.class)
+                .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
+                .addPackages(true,
+                        StatisticsProvider.class.getPackage(),
+                        StatisticsProviderImpl.class.getPackage(),
+                        Transaction.class.getPackage(),
+                        ExchangeRatesProvider.class.getPackage(),
+                        Statistics.class.getPackage()).
+                        addPackages(true, "org.assertj.core");
+
+        war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
+                .resolve("org.mockito:mockito-all").withTransitivity().asFile());
+
+        war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
+                .resolve("org.apache.commons:commons-lang3").withTransitivity().asFile());
+
+        war.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+
+        return war;
+    }
+
+    @Before
     public void setUp() throws Exception {
+
+
         EUR = new Currency();
         EUR.setCode("EUR");
         EUR.setName("Euro");
@@ -58,7 +101,7 @@ public class StatisticsProviderImplTest extends TestCase {
 
 
 
-        //MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
         Mockito.when(userManager.getCurrentUser()).thenReturn(user);
 
         Category cars = new Category();
@@ -158,9 +201,22 @@ public class StatisticsProviderImplTest extends TestCase {
         t6.setDate(LocalDate.now());
         em.persist(t6);
 
+
+
+
     }
 
+    @Test
     public void testGetStatisticsByDateRange() throws Exception {
 
+        System.out.println(statisticsProvider);
+        Statistics statistics = statisticsProvider.getStatisticsByDateRange(LocalDate.of(1900, 1, 1), LocalDate.now());
+        System.out.println(statistics.getStartDate());
+        System.out.println(statistics.getEndDate());
+        System.out.println(statistics.getCurrencyCode());
+        System.out.println(statistics.getExpenses());
+        System.out.println(statistics.getTotalExpense());
+        System.out.println(statistics.getIncomes());
+        System.out.println(statistics.getTotalIncome());
     }
 }

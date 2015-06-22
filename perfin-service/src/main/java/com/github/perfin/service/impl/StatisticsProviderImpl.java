@@ -38,8 +38,8 @@ public class StatisticsProviderImpl implements StatisticsProvider {
         Currency defaultCurrency = currentUser.getDefaultCurrency();
         //incomes
         Query query = em.createQuery("SELECT t FROM Transaction t WHERE t.date >= :startDate AND t.date <= :endDate AND t.amount > 0 AND t.resource.user = :user");
-        query.setParameter("startDate", startDate);
-        query.setParameter("endDate", endDate);
+//        query.setParameter("startDate", startDate);
+//        query.setParameter("endDate", endDate);
         query.setParameter("user", currentUser);
 
         List<Transaction> incomeTransactions = query.getResultList();
@@ -120,8 +120,8 @@ public class StatisticsProviderImpl implements StatisticsProvider {
                 BigDecimal totalCategory = BigDecimal.ZERO;
 
                 for (Transaction trans : entry.getValue()) {
-                    totalCategory.add(trans.getAmount());
-                    total.add(trans.getAmount());
+                    totalCategory = totalCategory.add(trans.getAmount());
+                    total = total.add(trans.getAmount());
                 }
 
                 totalCategory.setScale(2, RoundingMode.CEILING);
