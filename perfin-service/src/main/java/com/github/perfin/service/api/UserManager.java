@@ -21,5 +21,7 @@ public interface UserManager {
      * @return logged user
      */
     User getCurrentUser();
+    
+    User getUser(String userName);
 
 }

@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
+@NamedQuery(name = "selectByUserName", query = "SELECT r FROM Resource r WHERE r.user.userName = :userName")
 public class Resource implements Serializable {
 
     private static final long serialVersionUID = -4452987200669023961L;

@@ -1,63 +1,55 @@
 package com.github.perfin.service.websocket;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.logging.Logger;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
-import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
-import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
+import com.github.perfin.model.entity.Currency;
 import com.github.perfin.model.entity.Resource;
+import com.github.perfin.service.api.CurrencyConverter;
 import com.github.perfin.service.api.ResourceManager;
+import com.github.perfin.service.api.UserManager;
+import com.github.perfin.service.dto.ResourceBalance;
 
-@ServerEndpoint("/balances")
+@ServerEndpoint(value = "/balances", encoders = {ResourceBalanceEncoder.class})
 public class ResourceBalanceEndpoint {
     
-    private static final Logger LOG = Logger.getLogger(ResourceBalanceEndpoint.class.getName());
-    private static Set<Session> peers = Collections.synchronizedSet(new HashSet<Session>());
-
     @Inject
     private ResourceManager resourceManager;
     
-    /**
-     * 
-     * @param message format RESOURCE:{id}
-     * @return message in format {resourceId: id, currentBalance:<balance>}
-     *          {} - if no such resource exist or resource doesn't belong to user
-     */
+    @Inject
+    private CurrencyConverter currencyConverter;
+    
+    @Inject
+    private UserManager userManager;
+    
     @OnMessage
-    public String hello(String message) {
-        if(message.startsWith("RESOURCE:")) {
-            String[] parts = message.split(":");
-            if(parts.length != 2) {
-                return "{}";
-            }
-            Long resId = Long.valueOf(parts[1]);
-            Resource res = resourceManager.getResource(resId);
-            if(res == null) {
-                return "{}";
-            }
+    public ResourceBalance getBalances(String message, Session peer) {
+        if(message.equals("BALANCES")) {
+            String userName = peer.getUserPrincipal().getName();
+            Currency targetCurrency = userManager.getUser(userName).getDefaultCurrency();
             
-            return "{resource: " + resId + ", currentBalance: " + res.getBalance() +"}";
+            BigDecimal totalAmount = BigDecimal.ZERO;
+            List<Resource> resources = resourceManager.getUserResources(userName);
+            Map<String, String> converted = new HashMap<String, String>();
+            
+            for(Resource res : resources) {
+                BigDecimal convertedBalance = currencyConverter.convert(res.getBalance(), res.getCurrency(), targetCurrency);
+                convertedBalance = convertedBalance.setScale(2, RoundingMode.CEILING);
+                converted.put(res.getName(), String.valueOf(convertedBalance));
+                totalAmount = totalAmount.add(convertedBalance);
+            }
+            return new ResourceBalance(converted, totalAmount.toString(), targetCurrency.getCode());
         } else {
-            return "{}";
+            return null;
         }
-    }
- 
-    @OnOpen
-    public void onOpen(Session peer) {
-        LOG.info("WebSocket opened: " + peer.getId());
-        peers.add(peer);
-    }
- 
-    @OnClose
-    public void onClose(Session peer) {
-        LOG.info("Closing a WebSocket: " + peer.getId());
-        peers.remove(peer);
+        
     }
 }

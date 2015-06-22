@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.security.Principal;
 
 @Stateless
@@ -33,6 +34,13 @@ public class UserManagerImpl implements UserManager {
     public User getCurrentUser() {
         Query query = em.createQuery("SELECT u FROM User u WHERE u.userName = :name", User.class);
         query.setParameter("name", principal.getName());
+        return (User) query.getSingleResult();
+    }
+
+    @Override
+    public User getUser(String userName) {
+        Query query = em.createNamedQuery("getUserByUserName");
+        query.setParameter("userName", userName);
         return (User) query.getSingleResult();
     }
 

@@ -28,8 +28,8 @@ public class CurrencyConverterImpl implements CurrencyConverter {
 
     @Override
     public BigDecimal convert(BigDecimal amount, Currency originalCurrency, Currency targetCurrency) {
-        Query query = em.createQuery("SELECT er.ratio FROM ExchangeRate er WHERE er.origin = :origin AND " +
-                "er.target = :target AND er.date = :date", BigDecimal.class);
+        Query query = em.createQuery("SELECT er.ratio FROM ExchangeRate er WHERE er.origin.code = :origin AND " +
+                "er.target.code = :target AND er.date = :date", BigDecimal.class);
         query.setParameter("origin", originalCurrency.getCode());
         query.setParameter("target", targetCurrency.getCode());
         query.setParameter("date", LocalDate.now());

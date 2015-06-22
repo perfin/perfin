@@ -1,5 +1,7 @@
 package com.github.perfin.service.api;
 
+import java.util.List;
+
 import com.github.perfin.model.entity.Resource;
 import com.github.perfin.service.dto.PaginatedListWrapper;
 
@@ -34,4 +36,6 @@ public interface ResourceManager {
      * @return null if resource doesn't belong to user
      */
     Resource getResource(Long id);
+    
+    List<Resource> getUserResources(String userName);
 }

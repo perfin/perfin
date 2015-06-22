@@ -134,4 +134,12 @@ public class ResourceManagerImpl implements ResourceManager {
         }
         return res;
     }
+
+    @Override
+    public List<Resource> getUserResources(String userName) {
+        Query query = em.createNamedQuery("selectByUserName");
+        query.setParameter("userName", userName);
+        
+        return query.getResultList();
+    }
 }

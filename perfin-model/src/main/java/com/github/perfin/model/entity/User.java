@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
+@NamedQuery(name = "getUserByUserName", query = "SELECT u FROM User u where u.userName = :userName")
 public class User implements Serializable {
 
     @Id
