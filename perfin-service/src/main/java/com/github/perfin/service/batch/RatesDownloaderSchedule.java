@@ -11,7 +11,7 @@ public class RatesDownloaderSchedule {
 
     @Schedule(hour = "0", minute = "1", second = "0")
     public void myJob() {
-        BatchRuntime.getJobOperator().start("RatesDownloader", new Properties());
+        BatchRuntime.getJobOperator().start("ratesDownloadJob", new Properties());
     }
 
 }

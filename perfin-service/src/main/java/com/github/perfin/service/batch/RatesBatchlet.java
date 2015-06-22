@@ -2,8 +2,10 @@ package com.github.perfin.service.batch;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
-import javax.batch.api.chunk.ItemProcessor;
+import javax.batch.api.AbstractBatchlet;
+import javax.batch.runtime.BatchStatus;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -11,21 +13,21 @@ import com.github.perfin.model.entity.ExchangeRate;
 import com.github.perfin.service.rest.ExchangeRatesProvider;
 
 @Named
-public class RatesProcessor implements ItemProcessor {
+public class RatesBatchlet extends AbstractBatchlet {
     
     @Inject
     private ExchangeRatesProvider erp;
     
     @Override
-    public Object processItem(Object arg0) throws Exception {
-        List<ExchangeRate> rates = (List<ExchangeRate>) arg0;
-        
+    public String process() throws InterruptedException, ExecutionException {
+        System.out.println("Running inside a batchlet");
+        List<ExchangeRate> rates = erp.getStoredRates();
         for(ExchangeRate er : rates) {
             er.setDate(LocalDate.now());
             er.setRatio(erp.getLatestRatio(er.getOrigin().getCode(), er.getTarget().getCode()).get());
+            erp.saveRate(er);
         }
-
-        return rates;
+        
+        return BatchStatus.COMPLETED.toString();
     }
-
 }

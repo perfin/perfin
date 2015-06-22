@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
+@NamedQuery(name = "getAllRates", query = "SELECT er FROM ExchangeRate er")
 public class ExchangeRate implements Serializable {
 
     @Id

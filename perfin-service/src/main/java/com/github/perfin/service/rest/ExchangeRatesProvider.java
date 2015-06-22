@@ -48,7 +48,7 @@ public class ExchangeRatesProvider {
     }
 
     public List<ExchangeRate> getStoredRates(){
-        Query query = em.createQuery("SELECT e from ExchangeRate e");
+        Query query = em.createNamedQuery("getAllRates");
         return query.getResultList();
     }
     
