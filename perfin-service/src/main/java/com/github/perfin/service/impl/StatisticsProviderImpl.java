@@ -1,5 +1,7 @@
 package com.github.perfin.service.impl;
 
+import com.github.perfin.model.entity.Category;
+import com.github.perfin.model.entity.Currency;
 import com.github.perfin.model.entity.Transaction;
 import com.github.perfin.model.entity.User;
 import com.github.perfin.service.api.CurrencyConverter;
@@ -12,7 +14,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +35,7 @@ public class StatisticsProviderImpl implements StatisticsProvider {
     @Override
     public Statistics getStatisticsByDateRange(LocalDate startDate, LocalDate endDate) {
         User currentUser = userManager.getCurrentUser();
+        Currency defaultCurrency = currentUser.getDefaultCurrency();
         //incomes
         Query query = em.createQuery("SELECT T FROM Transaction t WHERE t.date >= :startDate AND t.date <= :endDate AND t.amount > 0 AND t.resource.user = :user");
         query.setParameter("startDate", startDate);
@@ -39,25 +44,44 @@ public class StatisticsProviderImpl implements StatisticsProvider {
 
         List<Transaction> incomeTransactions = query.getResultList();
 
-        List<Object[]> results = query.getResultList();
-        Map<String, String> incomes = new HashMap<>();
+        Map<Category, List<Transaction>> incomeTransactionsByCategory = new HashMap<>();
 
-        for (Object[] row : results) {
-            incomes.put(row[0].toString(), row[1].toString());
-        }
-
-        //total income
-
-        BigDecimal totalIncome = new BigDecimal(0);
-
+        //will group transactions by category with correct currency
         for (Transaction t : incomeTransactions) {
-            if (!currentUser.getDefaultCurrency().equals(t.getResource().getCurrency())) {
-                totalIncome = totalIncome.add(currencyConverter.convert(t.getAmount(), t.getResource().getCurrency(), currentUser.getDefaultCurrency()));
+            Transaction transactionToAdd = new Transaction();
+            //first, we will convert to default currency
+            if (!defaultCurrency.equals(t.getResource().getCurrency())) {
+                transactionToAdd.setAmount(currencyConverter.convert(t.getAmount(), t.getResource().getCurrency(), defaultCurrency));
             } else {
-                totalIncome = totalIncome.add(t.getAmount());
+                transactionToAdd = t;
             }
 
+            //group transactions by categories
+            Category category = t.getCategory();
+            if (incomeTransactionsByCategory.containsKey(category)) {
+                incomeTransactionsByCategory.get(category).add(transactionToAdd);
+            } else {
+                List<Transaction> list = new ArrayList<>();
+                list.add(transactionToAdd);
+                incomeTransactionsByCategory.put(category, list);
+            }
         }
+
+        Map<String, String> finalTotalIncomeByCategory = new HashMap<>();
+        BigDecimal totalIncome = BigDecimal.ZERO;
+
+        for (Map.Entry<Category, List<Transaction>> entry : incomeTransactionsByCategory.entrySet()) {
+            BigDecimal totalIncomeByCategory = BigDecimal.ZERO;
+
+            for (Transaction trans : entry.getValue()) {
+                totalIncomeByCategory.add(trans.getAmount());
+                totalIncome.add(trans.getAmount());
+            }
+
+            totalIncomeByCategory.setScale(2, RoundingMode.CEILING);
+            finalTotalIncomeByCategory.put(entry.getKey().getName(), String.valueOf(totalIncomeByCategory));
+        }
+
 
 
         Statistics statistics = null;
