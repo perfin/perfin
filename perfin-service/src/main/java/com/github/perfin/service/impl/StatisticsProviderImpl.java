@@ -44,7 +44,33 @@ public class StatisticsProviderImpl implements StatisticsProvider {
 
         List<Transaction> incomeTransactions = query.getResultList();
 
-        Map<Category, List<Transaction>> incomeTransactionsByCategory = new HashMap<>();
+        Map<Category, List<Transaction>> incomeTransactionsByCategory = groupTransactionsByCategoryAndConvert(defaultCurrency, incomeTransactions);
+
+        ComputeSums computeSums = new ComputeSums(incomeTransactionsByCategory).invoke();
+        Map<String, String> totalIncomeByCategory = computeSums.getTotalByCategory();
+        BigDecimal totalIncome = computeSums.getTotal();
+
+        //expenses
+        query = em.createQuery("SELECT t FROM Transaction t WHERE t.date >= :startDate AND t.date <= :endDate AND t.amount < 0 AND t.resource.user = :user");
+        query.setParameter("startDate", startDate);
+        query.setParameter("endDate", endDate);
+        query.setParameter("user", currentUser);
+
+        List<Transaction> expenseTransactions = query.getResultList();
+
+        Map<Category, List<Transaction>> expenseTransactionsByCategory = groupTransactionsByCategoryAndConvert(defaultCurrency, expenseTransactions);
+
+        computeSums = new ComputeSums(expenseTransactionsByCategory).invoke();
+        Map<String, String> totalExpenseByCategory = computeSums.getTotalByCategory();
+        BigDecimal totalExpense = computeSums.getTotal();
+
+        Statistics statistics = new Statistics(startDate.toString(), endDate.toString(), totalIncomeByCategory, String.valueOf(totalIncome), totalExpenseByCategory, String.valueOf(totalExpense), defaultCurrency.getCode());
+
+        return statistics;
+    }
+
+    private Map<Category, List<Transaction>> groupTransactionsByCategoryAndConvert(Currency defaultCurrency, List<Transaction> incomeTransactions) {
+        Map<Category, List<Transaction>> transactionsByCategory = new HashMap<>();
 
         //will group transactions by category with correct currency
         for (Transaction t : incomeTransactions) {
@@ -58,80 +84,50 @@ public class StatisticsProviderImpl implements StatisticsProvider {
 
             //group transactions by categories
             Category category = t.getCategory();
-            if (incomeTransactionsByCategory.containsKey(category)) {
-                incomeTransactionsByCategory.get(category).add(transactionToAdd);
+            if (transactionsByCategory.containsKey(category)) {
+                transactionsByCategory.get(category).add(transactionToAdd);
             } else {
                 List<Transaction> list = new ArrayList<>();
                 list.add(transactionToAdd);
-                incomeTransactionsByCategory.put(category, list);
+                transactionsByCategory.put(category, list);
             }
         }
+        return transactionsByCategory;
+    }
 
-        Map<String, String> finalTotalIncomeByCategory = new HashMap<>();
-        BigDecimal totalIncome = BigDecimal.ZERO;
+    private class ComputeSums {
+        private Map<Category, List<Transaction>> transactionsByCategory;
+        private Map<String, String> totalByCategory;
+        private BigDecimal total;
 
-        for (Map.Entry<Category, List<Transaction>> entry : incomeTransactionsByCategory.entrySet()) {
-            BigDecimal totalIncomeByCategory = BigDecimal.ZERO;
-
-            for (Transaction trans : entry.getValue()) {
-                totalIncomeByCategory.add(trans.getAmount());
-                totalIncome.add(trans.getAmount());
-            }
-
-            totalIncomeByCategory.setScale(2, RoundingMode.CEILING);
-            finalTotalIncomeByCategory.put(entry.getKey().getName(), String.valueOf(totalIncomeByCategory));
+        public ComputeSums(Map<Category, List<Transaction>> TransactionsByCategory) {
+            this.transactionsByCategory = TransactionsByCategory;
         }
 
-        //expenses
-        query = em.createQuery("SELECT t FROM Transaction t WHERE t.date >= :startDate AND t.date <= :endDate AND t.amount < 0 AND t.resource.user = :user");
-        query.setParameter("startDate", startDate);
-        query.setParameter("endDate", endDate);
-        query.setParameter("user", currentUser);
-
-        List<Transaction> expenseTransactions = query.getResultList();
-
-        Map<Category, List<Transaction>> expenseTransactionsByCategory = new HashMap<>();
-
-        //will group transactions by category with correct currency
-        for (Transaction t : expenseTransactions) {
-            Transaction transactionToAdd = new Transaction();
-            //first, we will convert to default currency
-            if (!defaultCurrency.equals(t.getResource().getCurrency())) {
-                transactionToAdd.setAmount(currencyConverter.convert(t.getAmount(), t.getResource().getCurrency(), defaultCurrency));
-            } else {
-                transactionToAdd = t;
-            }
-
-            //group transactions by categories
-            Category category = t.getCategory();
-            if (expenseTransactionsByCategory.containsKey(category)) {
-                expenseTransactionsByCategory.get(category).add(transactionToAdd);
-            } else {
-                List<Transaction> list = new ArrayList<>();
-                list.add(transactionToAdd);
-                expenseTransactionsByCategory.put(category, list);
-            }
+        public Map<String, String> getTotalByCategory() {
+            return totalByCategory;
         }
 
-        Map<String, String> finalTotalExpenseByCategory = new HashMap<>();
-        BigDecimal totalExpense = BigDecimal.ZERO;
-
-        for (Map.Entry<Category, List<Transaction>> entry : expenseTransactionsByCategory.entrySet()) {
-            BigDecimal totalExpenseByCategory = BigDecimal.ZERO;
-
-            for (Transaction trans : entry.getValue()) {
-                totalExpenseByCategory.add(trans.getAmount());
-                totalExpense.add(trans.getAmount());
-            }
-
-            totalExpenseByCategory.setScale(2, RoundingMode.CEILING);
-            finalTotalExpenseByCategory.put(entry.getKey().getName(), String.valueOf(totalExpenseByCategory));
+        public BigDecimal getTotal() {
+            return total;
         }
 
+        public ComputeSums invoke() {
+            totalByCategory = new HashMap<>();
+            total = BigDecimal.ZERO;
 
+            for (Map.Entry<Category, List<Transaction>> entry : transactionsByCategory.entrySet()) {
+                BigDecimal totalCategory = BigDecimal.ZERO;
 
-        Statistics statistics = new Statistics(startDate.toString(), endDate.toString(), finalTotalIncomeByCategory, String.valueOf(totalIncome), finalTotalExpenseByCategory, String.valueOf(totalExpense), defaultCurrency.getCode());
+                for (Transaction trans : entry.getValue()) {
+                    totalCategory.add(trans.getAmount());
+                    total.add(trans.getAmount());
+                }
 
-        return statistics;
+                totalCategory.setScale(2, RoundingMode.CEILING);
+                this.totalByCategory.put(entry.getKey().getName(), String.valueOf(totalCategory));
+            }
+            return this;
+        }
     }
 }
