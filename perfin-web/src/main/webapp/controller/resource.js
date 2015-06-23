@@ -78,7 +78,6 @@ app.controller('resourceFormController', function ($scope, $rootScope, resourceS
     currencyService.get({all : true}, function (data) {
         $scope.currencies = data.list;
     });
-    $scope.selectedCurrency = null;
 
     // Clears the form. Either by clicking the 'Clear' button in the form, or when a successfull save is performed.
     $scope.clearForm = function () {
@@ -94,7 +93,7 @@ app.controller('resourceFormController', function ($scope, $rootScope, resourceS
 
     // Calls the rest method to save a resource.
     $scope.updateResource = function () {
-        $scope.resource.currency = _.findWhere($scope.currencies, {id: $scope.selectedCurrency});
+        $scope.resource.currency = _.findWhere($scope.currencies, {id: $scope.resource.currency.id});
 
         resourceService.save($scope.resource).$promise.then(
             function () {

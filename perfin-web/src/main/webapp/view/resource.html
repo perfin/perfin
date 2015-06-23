@@ -48,8 +48,8 @@
         <span
             ng-class="{'glyphicon glyphicon-ok' : resourceForm.currency.$valid && resourceForm.currency.$dirty}"></span>
 
-        <select id="currency" name="currency" required
-            ng-model="selectedCurrency" ng-options="currency.id as currency.code for currency in currencies"></select>
+        <select id="currency" name="currency" required ng-model="resource.currency.id"
+            ng-options="currency.id as currency.code for currency in currencies"></select>
 
         <!-- Validation messages to be displayed on required -->
         <p class="help-block" ng-show="resourceForm.currency.$error.required">You must enter resource currency.</p>
