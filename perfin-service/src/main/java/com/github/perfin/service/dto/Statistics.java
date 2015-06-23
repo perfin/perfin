@@ -1,8 +1,9 @@
 package com.github.perfin.service.dto;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 import java.util.Map;
-
+@XmlRootElement
 public class Statistics implements Serializable {
 
     /**
