@@ -72,9 +72,6 @@ app.controller('categoryFormController', function ($scope, $rootScope, categoryS
     // Clears the form. Either by clicking the 'Clear' button in the form, or when a successfull save is performed.
     $scope.clearForm = function () {
         $scope.category = null;
-        // For some reason, I was unable to clear field values with type 'url' if the value is invalid.
-        // This is a workaroud. Needs proper investigation.
-        document.getElementById('imageUrl').value = null;
         // Resets the form validation state.
         $scope.categoryForm.$setPristine();
         // Broadcast the event to also clear the grid selection.
