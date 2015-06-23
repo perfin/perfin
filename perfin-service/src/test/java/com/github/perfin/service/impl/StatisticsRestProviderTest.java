@@ -1,17 +1,19 @@
 package com.github.perfin.service.impl;
 
 import com.github.perfin.model.entity.*;
-import com.github.perfin.service.TestWebArchiveHelper;
 import com.github.perfin.service.api.CurrencyConverter;
+import com.github.perfin.service.api.StatisticsProvider;
 import com.github.perfin.service.api.UserManager;
 import com.github.perfin.service.dto.Statistics;
-
+import com.github.perfin.service.rest.ExchangeRatesProvider;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.transaction.api.annotation.Transactional;
 import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +22,6 @@ import org.mockito.*;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -210,10 +211,33 @@ public class StatisticsRestProviderTest {
         System.out.println(statistics.getIncomes());
         System.out.println(statistics.getTotalIncome());
 
+        assertThat(statistics.getStartDate()).isEqualTo(LocalDate.of(1970, 1, 1).toString());
+        assertThat(statistics.getEndDate()).isEqualTo(LocalDate.of(2100, 1, 1).toString());
+        assertThat(statistics.getCurrencyCode()).isEqualTo("EUR");
+        assertThat(statistics.getExpenses().size()).isEqualTo(2);
+        assertThat(statistics.getTotalExpense()).isEqualTo("1050.00");
+        assertThat(statistics.getIncomes().size()).isEqualTo(1);
+        assertThat(statistics.getTotalIncome()).isEqualTo("1000.00");
 
+        statistics = statisticsRestProvider.getStatisticsByDateRange(null, now.toString());
 
+        assertThat(statistics.getStartDate()).isEqualTo(LocalDate.of(1970, 1, 1).toString());
+        assertThat(statistics.getEndDate()).isEqualTo(now.toString());
+        assertThat(statistics.getCurrencyCode()).isEqualTo("EUR");
+        assertThat(statistics.getExpenses().size()).isEqualTo(2);
+        assertThat(statistics.getTotalExpense()).isEqualTo("1050.00");
+        assertThat(statistics.getIncomes().size()).isEqualTo(1);
+        assertThat(statistics.getTotalIncome()).isEqualTo("1000.00");
 
+        statistics = statisticsRestProvider.getStatisticsByDateRange(LocalDate.of(1996 , 1, 1).toString(), LocalDate.now().toString());
 
+        assertThat(statistics.getStartDate()).isEqualTo(LocalDate.of(1996 , 1, 1).toString());
+        assertThat(statistics.getEndDate()).isEqualTo(now.toString());
+        assertThat(statistics.getCurrencyCode()).isEqualTo("EUR");
+        assertThat(statistics.getExpenses().size()).isEqualTo(1);
+        assertThat(statistics.getTotalExpense()).isEqualTo("450.00");
+        assertThat(statistics.getIncomes().size()).isEqualTo(1);
+        assertThat(statistics.getTotalIncome()).isEqualTo("1000.00");
 
     }
 }

@@ -30,13 +30,13 @@ public class StatisticsRestProvider {
             if(startDate == null) {
                 start = LocalDate.of(1970, 1, 1);
             } else {
-                start = LocalDate.parse(startDate, DateTimeFormatter.BASIC_ISO_DATE);
+                start = LocalDate.parse(startDate, DateTimeFormatter.ISO_LOCAL_DATE);
             }
 
             if (endDate == null) {
                 end = LocalDate.of(2100, 1, 1);
             } else {
-                end = LocalDate.parse(endDate, DateTimeFormatter.BASIC_ISO_DATE);
+                end = LocalDate.parse(endDate, DateTimeFormatter.ISO_LOCAL_DATE);
             }
 
         } catch (DateTimeParseException ex) {
