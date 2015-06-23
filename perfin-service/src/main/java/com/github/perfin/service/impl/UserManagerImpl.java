@@ -10,10 +10,21 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 import java.security.Principal;
 
 @Stateless
+@ApplicationPath("/service")
+@Path("users")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 @PermitAll
 public class UserManagerImpl implements UserManager {
 
@@ -24,6 +35,7 @@ public class UserManagerImpl implements UserManager {
     private Principal principal;
 
     @Override
+    @POST
     public void changeDefaultCurrency(Currency currency) {
         User user = em.find(User.class, getCurrentUser().getId());
         user.setDefaultCurrency(currency);
@@ -31,6 +43,7 @@ public class UserManagerImpl implements UserManager {
     }
 
     @Override
+    @GET
     public User getCurrentUser() {
         Query query = em.createQuery("SELECT u FROM User u WHERE u.userName = :name", User.class);
         query.setParameter("name", principal.getName());
@@ -43,5 +56,4 @@ public class UserManagerImpl implements UserManager {
         query.setParameter("userName", userName);
         return (User) query.getSingleResult();
     }
-
 }

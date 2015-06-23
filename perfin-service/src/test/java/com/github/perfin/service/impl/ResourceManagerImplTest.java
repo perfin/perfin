@@ -39,7 +39,7 @@ public class ResourceManagerImplTest {
     private UserManager userManager;
 
     @Inject
-    private TestUserManager testUserManager;
+    private UserManagerHelper testUserManager;
 
     @Inject
     private CurrencyManager currencyManager;

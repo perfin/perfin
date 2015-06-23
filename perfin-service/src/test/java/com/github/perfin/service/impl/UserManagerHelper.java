@@ -13,7 +13,7 @@ import com.github.perfin.model.entity.User;
  *
  */
 @Stateless
-public class TestUserManager {
+public class UserManagerHelper {
 
     @PersistenceContext
     private EntityManager em;

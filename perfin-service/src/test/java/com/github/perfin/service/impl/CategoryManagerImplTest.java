@@ -47,7 +47,7 @@ public class CategoryManagerImplTest {
     private CurrencyManager currencyManager;
 
     @Inject
-    private TestUserManager testUserManager;
+    private UserManagerHelper testUserManager;
 
     private User user;
     private Currency cur;
