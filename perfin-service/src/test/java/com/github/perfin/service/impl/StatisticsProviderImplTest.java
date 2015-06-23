@@ -25,6 +25,8 @@ import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 @RunWith(Arquillian.class)
 @Transactional
 public class StatisticsProviderImplTest {
@@ -48,6 +50,8 @@ public class StatisticsProviderImplTest {
     private Currency USD;
 
     private User user;
+
+    private LocalDate now;
 
     @Deployment
     public static Archive<?> getDeployment() {
@@ -75,7 +79,7 @@ public class StatisticsProviderImplTest {
 
     @Before
     public void setUp() throws Exception {
-
+        now = LocalDate.now();
 
         EUR = new Currency();
         EUR.setCode("EUR");
@@ -88,7 +92,8 @@ public class StatisticsProviderImplTest {
         em.persist(USD);
 
         ExchangeRate exchangeRate = new ExchangeRate();
-        exchangeRate.setDate(LocalDate.now());
+
+        exchangeRate.setDate(now);
         exchangeRate.setOrigin(USD);
         exchangeRate.setTarget(EUR);
         exchangeRate.setRatio(new BigDecimal("0.8"));
@@ -133,7 +138,7 @@ public class StatisticsProviderImplTest {
         t1.setAmount(new BigDecimal(1000));
         t1.setCategory(cars);
         t1.setResource(bankAccount);
-        t1.setDate(LocalDate.now());
+        t1.setDate(now);
         em.persist(t1);
 
         Transaction t2 = new Transaction();
@@ -147,7 +152,7 @@ public class StatisticsProviderImplTest {
         t3.setAmount(new BigDecimal(-450));
         t3.setCategory(household);
         t3.setResource(bankAccount);
-        t3.setDate(LocalDate.now());
+        t3.setDate(now);
         em.persist(t3);
 
         //------- 2nd User -------
@@ -185,7 +190,7 @@ public class StatisticsProviderImplTest {
         t4.setAmount(new BigDecimal(550));
         t4.setCategory(cars2);
         t4.setResource(bankAccount2);
-        t4.setDate(LocalDate.now());
+        t4.setDate(now);
         em.persist(t4);
 
         Transaction t5 = new Transaction();
@@ -199,7 +204,7 @@ public class StatisticsProviderImplTest {
         t6.setAmount(new BigDecimal(-350));
         t6.setCategory(household2);
         t6.setResource(bankAccount2);
-        t6.setDate(LocalDate.now());
+        t6.setDate(now);
         em.persist(t6);
 
 
@@ -212,7 +217,7 @@ public class StatisticsProviderImplTest {
 
         System.out.println(LocalDate.MIN.getYear());
         System.out.println("STATISTICS\n\n");
-        Statistics statistics = statisticsProvider.getStatisticsByDateRange(LocalDate.of(LocalDate.MIN.getYear() , 1, 1), LocalDate.now());
+        Statistics statistics = statisticsProvider.getStatisticsByDateRange(LocalDate.of(LocalDate.MIN.getYear() , 1, 1), now);
         System.out.println(statistics.getStartDate());
         System.out.println(statistics.getEndDate());
         System.out.println(statistics.getCurrencyCode());
@@ -220,6 +225,14 @@ public class StatisticsProviderImplTest {
         System.out.println(statistics.getTotalExpense());
         System.out.println(statistics.getIncomes());
         System.out.println(statistics.getTotalIncome());
+
+        assertThat(statistics.getStartDate()).isEqualTo(LocalDate.of(LocalDate.MIN.getYear(), 1, 1).toString());
+        assertThat(statistics.getEndDate()).isEqualTo(now.toString());
+        assertThat(statistics.getCurrencyCode()).isEqualTo("EUR");
+        assertThat(statistics.getExpenses().size()).isEqualTo(2);
+        assertThat(statistics.getTotalExpense()).isEqualTo("1050.00");
+        assertThat(statistics.getIncomes().size()).isEqualTo(1);
+        assertThat(statistics.getTotalIncome()).isEqualTo("1000.00");
 
         statistics = statisticsProvider.getStatisticsByDateRange(LocalDate.of(1996 , 1, 1), LocalDate.now());
         System.out.println(statistics.getStartDate());
@@ -229,5 +242,13 @@ public class StatisticsProviderImplTest {
         System.out.println(statistics.getTotalExpense());
         System.out.println(statistics.getIncomes());
         System.out.println(statistics.getTotalIncome());
+
+        assertThat(statistics.getStartDate()).isEqualTo(LocalDate.of(1996 , 1, 1).toString());
+        assertThat(statistics.getEndDate()).isEqualTo(now.toString());
+        assertThat(statistics.getCurrencyCode()).isEqualTo("EUR");
+        assertThat(statistics.getExpenses().size()).isEqualTo(1);
+        assertThat(statistics.getTotalExpense()).isEqualTo("450.00");
+        assertThat(statistics.getIncomes().size()).isEqualTo(1);
+        assertThat(statistics.getTotalIncome()).isEqualTo("1000.00");
     }
 }
