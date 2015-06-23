@@ -1,17 +1,15 @@
 package com.github.perfin.service.impl;
 
 import com.github.perfin.model.entity.Currency;
+import com.github.perfin.service.TestWebArchiveHelper;
 import com.github.perfin.service.api.CurrencyManager;
 import com.github.perfin.service.dto.PaginatedListWrapper;
-import com.github.perfin.service.rest.ExchangeRatesProvider;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +24,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
@@ -41,24 +40,7 @@ public class CurrencyManagerImplTest {
 
     @Deployment
     public static Archive<?> getDeployment() {
-        WebArchive war = ShrinkWrap
-                .create(WebArchive.class)
-                .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
-                .addPackages(true,
-                        CurrencyManager.class.getPackage(),
-                        CurrencyManagerImpl.class.getPackage(),
-                        Currency.class.getPackage(),
-                        ExchangeRatesProvider.class.getPackage(),
-                        PaginatedListWrapper.class.getPackage()).
-                        addPackages(true, "org.assertj.core");
-
-        war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
-                .resolve("org.mockito:mockito-all").withTransitivity().asFile());
-
-        war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
-                .resolve("org.apache.commons:commons-lang3").withTransitivity().asFile());
-
-        return war;
+        return TestWebArchiveHelper.getDeployment();
     }
 
     @After

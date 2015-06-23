@@ -11,9 +11,6 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.transaction.api.annotation.Transactional;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,9 +22,7 @@ import org.mockito.Spy;
 
 import com.github.perfin.model.entity.Currency;
 import com.github.perfin.model.entity.User;
-import com.github.perfin.service.api.UserManager;
-import com.github.perfin.service.dto.PaginatedListWrapper;
-import com.github.perfin.service.rest.ExchangeRatesProvider;
+import com.github.perfin.service.TestWebArchiveHelper;
 
 @RunWith(Arquillian.class)
 @Transactional
@@ -47,24 +42,7 @@ public class UserManagerImplTest {
     
     @Deployment
     public static Archive<?> getDeployment() {
-        WebArchive war = ShrinkWrap
-                .create(WebArchive.class)
-                .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
-                .addPackages(true,
-                        UserManager.class.getPackage(),
-                        UserManagerImpl.class.getPackage(),
-                        User.class.getPackage(),
-                        PaginatedListWrapper.class.getPackage(),
-                        ExchangeRatesProvider.class.getPackage()).
-                        addPackages(true, "org.assertj.core");
-
-        war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
-                .resolve("org.mockito:mockito-all").withTransitivity().asFile());
-
-        war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
-                .resolve("org.apache.commons:commons-lang3").withTransitivity().asFile());
-
-        return war;
+        return TestWebArchiveHelper.getDeployment();
     }
     
     @Before

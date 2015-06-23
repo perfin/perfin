@@ -2,6 +2,7 @@ package com.github.perfin.service.rest;
 
 import com.github.perfin.model.entity.Currency;
 import com.github.perfin.model.entity.ExchangeRate;
+import com.github.perfin.service.TestWebArchiveHelper;
 import com.github.perfin.service.api.CurrencyManager;
 
 import org.assertj.core.api.Assertions;
@@ -9,8 +10,6 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.transaction.api.annotation.Transactional;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,13 +32,7 @@ public class ExchangeRatesProviderTest {
 
     @Deployment
     public static Archive<?> getDeployment() {
-        return ShrinkWrap.create(WebArchive.class)
-                .addPackages(true, ExchangeRatesProvider.class.getPackage(), Currency.class.getPackage())
-                .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
-                .addPackages(true, "org.assertj.core")
-                .addPackages(true, "com.github.perfin.service.api")
-                .addPackages(true, "com.github.perfin.service.impl")
-                .addPackages(true, "com.github.perfin.service.dto");
+        return TestWebArchiveHelper.getDeployment();
                     
     }
 

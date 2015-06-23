@@ -1,18 +1,15 @@
 package com.github.perfin.service.impl;
 
 import com.github.perfin.model.entity.*;
+import com.github.perfin.service.TestWebArchiveHelper;
 import com.github.perfin.service.api.ResourceManager;
-import com.github.perfin.service.api.TransactionManager;
 import com.github.perfin.service.api.UserManager;
 import com.github.perfin.service.dto.PaginatedListWrapper;
-import com.github.perfin.service.rest.ExchangeRatesProvider;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.transaction.api.annotation.Transactional;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +19,7 @@ import org.mockito.stubbing.Answer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -52,21 +50,7 @@ public class TransactionManagerImplTest {
 
     @Deployment
     public static Archive<?> getDeployment() {
-        WebArchive war = ShrinkWrap
-                .create(WebArchive.class)
-                .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
-                .addPackages(true,
-                        TransactionManager.class.getPackage(),
-                        TransactionManagerImpl.class.getPackage(),
-                        Transaction.class.getPackage(),
-                        ExchangeRatesProvider.class.getPackage(),
-                        PaginatedListWrapper.class.getPackage()).
-                        addPackages(true, "org.assertj.core");
-
-        war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
-                .resolve("org.mockito:mockito-all").withTransitivity().asFile());
-
-        return war;
+        return TestWebArchiveHelper.getDeployment();
     }
 
     @Before

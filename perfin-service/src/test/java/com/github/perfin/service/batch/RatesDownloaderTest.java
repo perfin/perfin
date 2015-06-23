@@ -24,16 +24,15 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.github.perfin.model.entity.Currency;
 import com.github.perfin.model.entity.ExchangeRate;
+import com.github.perfin.service.TestWebArchiveHelper;
 
 @RunWith(Arquillian.class)
 public class RatesDownloaderTest {
@@ -50,24 +49,10 @@ public class RatesDownloaderTest {
     
     @Deployment
     public static Archive<?> getDeployment() {
-        WebArchive war = ShrinkWrap
-                .create(WebArchive.class)
-                .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
-                .addAsResource("META-INF/batch-jobs/ratesDownloadJob.xml")
-                .addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"))
-                .addPackages(true, "com.github.perfin.model.entity")
-                .addPackages(true, "com.github.perfin.service.api")
-                .addPackages(true, "com.github.perfin.service.impl")
-                .addPackages(true, "com.github.perfin.service.batch")
-                .addPackages(true, "com.github.perfin.service.dto")
-                .addPackages(true, "com.github.perfin.service.rest")
-                .addPackages(true, "org.assertj.core");
-        
-        war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
-                .resolve("org.mockito:mockito-all").withTransitivity().asFile());
-        
-        war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
-                .resolve("org.apache.commons:commons-lang3").withTransitivity().asFile());
+        WebArchive war = (WebArchive) TestWebArchiveHelper.getDeployment();
+        war.addAsResource("META-INF/batch-jobs/ratesDownloadJob.xml");
+        war.addAsWebInfResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
+        war.addPackages(true, "com.github.perfin.service.batch");
         
         return war;
     }

@@ -1,19 +1,17 @@
 package com.github.perfin.service.impl;
 
 import com.github.perfin.model.entity.*;
+import com.github.perfin.service.TestWebArchiveHelper;
 import com.github.perfin.service.api.CurrencyConverter;
-import com.github.perfin.service.api.StatisticsProvider;
 import com.github.perfin.service.api.UserManager;
 import com.github.perfin.service.dto.Statistics;
-import com.github.perfin.service.rest.ExchangeRatesProvider;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.transaction.api.annotation.Transactional;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +20,7 @@ import org.mockito.*;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -59,23 +58,9 @@ public class StatisticsRestProviderTest {
 
     @Deployment
     public static Archive<?> getDeployment() {
-        WebArchive war = ShrinkWrap
-                .create(WebArchive.class)
-                .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
-                .addPackages(true,
-                        StatisticsProvider.class.getPackage(),
-                        StatisticsProviderImpl.class.getPackage(),
-                        Transaction.class.getPackage(),
-                        ExchangeRatesProvider.class.getPackage(),
-                        Statistics.class.getPackage()).
-                        addPackages(true, "org.assertj.core");
+        WebArchive war = (WebArchive) TestWebArchiveHelper.getDeployment();
 
-        war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
-                .resolve("org.mockito:mockito-all").withTransitivity().asFile());
-
-        war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
-                .resolve("org.apache.commons:commons-lang3").withTransitivity().asFile());
-
+        war.addPackages(true, Statistics.class.getPackage());
         war.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 
         return war;

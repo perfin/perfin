@@ -3,18 +3,15 @@ package com.github.perfin.service.impl;
 import com.github.perfin.model.entity.Currency;
 import com.github.perfin.model.entity.Resource;
 import com.github.perfin.model.entity.User;
+import com.github.perfin.service.TestWebArchiveHelper;
 import com.github.perfin.service.api.CurrencyManager;
-import com.github.perfin.service.api.ResourceManager;
 import com.github.perfin.service.api.UserManager;
 import com.github.perfin.service.dto.PaginatedListWrapper;
-import com.github.perfin.service.rest.ExchangeRatesProvider;
+
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.transaction.api.annotation.Transactional;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +21,7 @@ import org.mockito.*;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -53,24 +51,7 @@ public class ResourceManagerImplTest {
 
     @Deployment
     public static Archive<?> getDeployment() {
-        WebArchive war = ShrinkWrap
-                .create(WebArchive.class)
-                .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
-                .addPackages(true,
-                        ResourceManager.class.getPackage(),
-                        ResourceManagerImpl.class.getPackage(),
-                        Resource.class.getPackage(),
-                        ExchangeRatesProvider.class.getPackage(),
-                        PaginatedListWrapper.class.getPackage()).
-                        addPackages(true, "org.assertj.core");
-
-        war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
-                .resolve("org.mockito:mockito-all").withTransitivity().asFile());
-
-        war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
-                .resolve("org.apache.commons:commons-lang3").withTransitivity().asFile());
-
-        return war;
+        return TestWebArchiveHelper.getDeployment();
     }
 
     @Before
