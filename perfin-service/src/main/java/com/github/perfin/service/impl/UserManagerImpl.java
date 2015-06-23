@@ -56,4 +56,13 @@ public class UserManagerImpl implements UserManager {
         query.setParameter("userName", userName);
         return (User) query.getSingleResult();
     }
+
+    void setEm(EntityManager em) {
+        this.em = em;
+    }
+
+    void setPrincipal(Principal principal) {
+        this.principal = principal;
+    }
+    
 }

@@ -1,11 +1,14 @@
 package com.github.perfin.model.entity;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 
 @Entity
 @NamedQuery(name = "getUserByUserName", query = "SELECT u FROM User u where u.userName = :userName")
 public class User implements Serializable {
+
+    private static final long serialVersionUID = 6769647195003253595L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
