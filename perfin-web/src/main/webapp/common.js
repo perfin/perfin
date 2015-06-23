@@ -1,4 +1,4 @@
-var app = angular.module('perfin', ['ngResource', 'ngRoute', 'ngGrid', 'ui.bootstrap', 'ui.bootstrap.datepicker']);
+var app = angular.module('perfin', ['ngResource', 'ngRoute', 'ngWebSocket', 'ngGrid', 'ui.bootstrap', 'ui.bootstrap.datepicker']);
 
 app.config(['$routeProvider', function ($routeProvider) {
     $routeProvider.

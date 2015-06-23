@@ -45,3 +45,27 @@
     </tfoot>
   </table>
 </div>
+
+<div ng-controller="balanceController">
+  <h3>Balances</h3>
+  <table class="statistics">
+    <thead>
+      <tr>
+        <th>Resource</th>
+        <th>Balance ({{resources.currencyCode}})</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="(resource, balance) in resources.balances">
+        <td>{{resource}}</td>
+        <td>{{balance}}</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>Total</th>
+        <th>{{resources.totalAmount}}</th>
+      </tr>
+    </tfoot>
+  </table>
+</div>
