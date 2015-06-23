@@ -1,7 +1,11 @@
 package com.github.perfin.model.entity;
 
+import com.github.perfin.model.util.LocalDateAdapter;
+import com.github.perfin.model.util.LocalDatePersistenceConverter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -35,6 +39,8 @@ public class Transaction implements Serializable {
     @NotNull(message = "amount of transaction can't be null")
     private BigDecimal amount;
 
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    @Convert(converter = LocalDatePersistenceConverter.class)
     @Column(nullable = false)
     @NotNull(message = "date of transaction can't be null")
     private LocalDate date;
