@@ -11,10 +11,17 @@ import javax.batch.runtime.BatchRuntime;
 import javax.batch.runtime.BatchStatus;
 import javax.batch.runtime.JobExecution;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.transaction.api.annotation.Transactional;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -22,24 +29,20 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.github.perfin.model.entity.Currency;
 import com.github.perfin.model.entity.ExchangeRate;
-import com.github.perfin.service.api.CurrencyManager;
-import com.github.perfin.service.rest.ExchangeRatesProvider;
 
 @RunWith(Arquillian.class)
-@Transactional
 public class RatesDownloaderTest {
     
-    @Inject
-    private ExchangeRatesProvider erp;
+    @PersistenceContext
+    private EntityManager em;
     
     @Inject
-    private CurrencyManager currencyManager;
+    private UserTransaction utx;
     
     private Currency eur;
     private Currency czk;
@@ -70,26 +73,31 @@ public class RatesDownloaderTest {
     }
     
     @Before
-    public void createRates() {
+    public void init() throws NotSupportedException, SystemException, 
+                              SecurityException, IllegalStateException, 
+                              RollbackException, HeuristicMixedException, 
+                              HeuristicRollbackException {
+        utx.begin();
+        em.joinTransaction();
         eur = new Currency();
         eur.setCode("EUR");
-        eur = currencyManager.saveCurrency(eur);
+        em.persist(eur);
         
         czk = new Currency();
         czk.setCode("CZK");
-        czk = currencyManager.saveCurrency(czk);
+        em.persist(czk);
         
         er = new ExchangeRate();
         er.setDate(LocalDate.of(2014, 10, 6));
         er.setRatio(BigDecimal.ONE);
         er.setOrigin(eur);
         er.setTarget(czk);
-        erp.saveRate(er);
+        em.persist(er);
+        utx.commit();
     }
     
     @Test
-    @Ignore
-    public void testBatchJob() throws InterruptedException {
+    public void testBatchJob() throws InterruptedException, NotSupportedException, SystemException, SecurityException, IllegalStateException, RollbackException, HeuristicMixedException, HeuristicRollbackException {
         JobOperator jobOperator = BatchRuntime.getJobOperator();
         Long executionId = jobOperator.start("ratesDownloadJob", new Properties());
         JobExecution jobExecution = jobOperator.getJobExecution(executionId);
@@ -101,6 +109,12 @@ public class RatesDownloaderTest {
         }
 
         assertThat(jobExecution.getBatchStatus()).isEqualTo(BatchStatus.COMPLETED);
+        
+        utx.begin();
+        em.joinTransaction();
+        er = em.find(ExchangeRate.class, er.getId());
+        utx.commit();
+        
         assertThat(er.getDate()).isEqualTo(LocalDate.now());
     }
 }

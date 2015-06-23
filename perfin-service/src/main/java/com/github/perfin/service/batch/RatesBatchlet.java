@@ -22,6 +22,7 @@ public class RatesBatchlet extends AbstractBatchlet {
     public String process() throws InterruptedException, ExecutionException {
         System.out.println("Running inside a batchlet");
         List<ExchangeRate> rates = erp.getStoredRates();
+        
         for(ExchangeRate er : rates) {
             er.setDate(LocalDate.now());
             er.setRatio(erp.getLatestRatio(er.getOrigin().getCode(), er.getTarget().getCode()).get());
