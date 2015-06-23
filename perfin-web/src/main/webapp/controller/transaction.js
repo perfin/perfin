@@ -90,7 +90,7 @@ app.controller('transactionFormController', function ($scope, $rootScope, transa
 
     // Clears the form. Either by clicking the 'Clear' button in the form, or when a successfull save is performed.
     $scope.clearForm = function () {
-        $scope.transaction = {date: new Date()};
+        $scope.transaction = {date: new Date().toJSON().slice(0, 10)};
         // Resets the form validation state.
         $scope.transactionForm.$setPristine();
         // Broadcast the event to also clear the grid selection.
