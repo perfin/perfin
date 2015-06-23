@@ -1,1 +1,47 @@
-<p>This month statistics as well as current resource balances should be here.</p>
+<div ng-controller="statisticsController">
+  <h2>Statistics</h2>
+
+  <h3>Incomes</h3>
+  <table class="statistics">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Income ({{statistics.currencyCode}})</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="(category, income) in statistics.incomes">
+        <td>{{category}}</td>
+        <td>{{income}}</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>Total</th>
+        <th>{{statistics.totalIncome}}</th>
+      </tr>
+    </tfoot>
+  </table>
+
+  <h3>Expenses</h3>
+  <table class="statistics">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Income ({{statistics.currencyCode}})</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="(category, income) in statistics.expenses">
+        <td>{{category}}</td>
+        <td>{{income}}</td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr>
+        <th>Total</th>
+        <th>{{statistics.totalExpense}}</th>
+      </tr>
+    </tfoot>
+  </table>
+</div>

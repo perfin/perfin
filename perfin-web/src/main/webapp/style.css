@@ -78,3 +78,14 @@ h3 {
     margin-top: 10px;
     margin-right: 25px;
 }
+
+table.statistics {
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+}
+
+table.statistics th, table.statistics td {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+}
