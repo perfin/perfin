@@ -28,13 +28,13 @@ public class StatisticsRestProvider {
         LocalDate end;
         try {
             if(startDate == null) {
-                start = LocalDate.MIN;
+                start = LocalDate.of(1970, 1, 1);
             } else {
                 start = LocalDate.parse(startDate, DateTimeFormatter.BASIC_ISO_DATE);
             }
 
             if (endDate == null) {
-                end = LocalDate.MAX;
+                end = LocalDate.of(2100, 1, 1);
             } else {
                 end = LocalDate.parse(endDate, DateTimeFormatter.BASIC_ISO_DATE);
             }

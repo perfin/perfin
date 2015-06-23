@@ -19,7 +19,7 @@
         <configuration>
             <property name="allowConnectingToRunningServer">true</property>
             <!-- If you want to use the JBOSS_HOME environment variable, just delete the jbossHome property: -->
-            <property name="jbossHome">/home/mmacik/Workspace/Servers/wildfly-8.2.0.Final</property>
+            <!--<property name="jbossHome">/path/to/jboss/as</property>-->
         </configuration>
     </container>
 </arquillian>
