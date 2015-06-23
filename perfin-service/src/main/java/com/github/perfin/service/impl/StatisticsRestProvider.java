@@ -3,6 +3,7 @@ package com.github.perfin.service.impl;
 import com.github.perfin.service.api.StatisticsProvider;
 import com.github.perfin.service.dto.Statistics;
 
+import javax.ejb.Local;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -26,8 +27,18 @@ public class StatisticsRestProvider {
         LocalDate start;
         LocalDate end;
         try {
-            start = LocalDate.parse(startDate, DateTimeFormatter.BASIC_ISO_DATE);
-            end = LocalDate.parse(endDate, DateTimeFormatter.BASIC_ISO_DATE);
+            if(startDate == null) {
+                start = LocalDate.MIN;
+            } else {
+                start = LocalDate.parse(startDate, DateTimeFormatter.BASIC_ISO_DATE);
+            }
+
+            if (endDate == null) {
+                end = LocalDate.MAX;
+            } else {
+                end = LocalDate.parse(endDate, DateTimeFormatter.BASIC_ISO_DATE);
+            }
+
         } catch (DateTimeParseException ex) {
             throw new IllegalArgumentException("Date format is wrong!", ex);
         }
