@@ -115,7 +115,7 @@ public class StatisticsProviderImplTest {
         em.persist(household);
 
         Resource bankAccount = new Resource();
-        bankAccount.setCurrency(USD);
+        bankAccount.setCurrency(EUR);
         bankAccount.setBalance(BigDecimal.ZERO);
         bankAccount.setName("Bank Account");
         bankAccount.setUser(user);
@@ -158,12 +158,12 @@ public class StatisticsProviderImplTest {
 
         Category cars2 = new Category();
         cars2.setName("Cars");
-        cars2.setUser(user);
+        cars2.setUser(anotherUser);
         em.persist(cars2);
 
         Category household2 = new Category();
         household2.setName("Household");
-        household2.setUser(user);
+        household2.setUser(anotherUser);
         em.persist(household2);
 
         Resource bankAccount2 = new Resource();
@@ -174,7 +174,7 @@ public class StatisticsProviderImplTest {
         em.persist(bankAccount2);
 
         Resource bankLoan2 = new Resource();
-        bankLoan2.setCurrency(USD);
+        bankLoan2.setCurrency(EUR);
         bankLoan2.setBalance(BigDecimal.ZERO);
         bankLoan2.setName("Bank Loan2");
         bankLoan2.setUser(anotherUser);
@@ -209,8 +209,8 @@ public class StatisticsProviderImplTest {
     @Test
     public void testGetStatisticsByDateRange() throws Exception {
 
-        System.out.println(statisticsProvider);
-        Statistics statistics = statisticsProvider.getStatisticsByDateRange(LocalDate.of(1900, 1, 1), LocalDate.now());
+        System.out.println(LocalDate.MIN.getYear());
+        Statistics statistics = statisticsProvider.getStatisticsByDateRange(LocalDate.of(LocalDate.MIN.getYear() , 1, 1), LocalDate.now());
         System.out.println(statistics.getStartDate());
         System.out.println(statistics.getEndDate());
         System.out.println(statistics.getCurrencyCode());
