@@ -115,17 +115,27 @@ public class StatisticsProviderImpl implements StatisticsProvider {
         public ComputeSums invoke() {
             totalByCategory = new HashMap<>();
             total = BigDecimal.ZERO;
+            total = total.setScale(2, RoundingMode.CEILING);
 
             for (Map.Entry<Category, List<Transaction>> entry : transactionsByCategory.entrySet()) {
                 BigDecimal totalCategory = BigDecimal.ZERO;
+                totalCategory = totalCategory.setScale(2, RoundingMode.CEILING);
 
                 for (Transaction trans : entry.getValue()) {
-                    totalCategory = totalCategory.add(trans.getAmount());
-                    total = total.add(trans.getAmount());
+                    BigDecimal amount = trans.getAmount();
+                    if (amount.compareTo(BigDecimal.ZERO) == -1) {
+                        amount = trans.getAmount().negate();
+                    }
+                    totalCategory = totalCategory.add(amount);
+                    total = total.add(amount);
                 }
 
-                totalCategory.setScale(2, RoundingMode.CEILING);
+
                 this.totalByCategory.put(entry.getKey().getName(), String.valueOf(totalCategory));
+            }
+
+            if (total.compareTo(BigDecimal.ZERO) == -1){
+                total = total.negate();
             }
             return this;
         }

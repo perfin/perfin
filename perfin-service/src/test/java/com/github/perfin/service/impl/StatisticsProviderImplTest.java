@@ -92,6 +92,7 @@ public class StatisticsProviderImplTest {
         exchangeRate.setOrigin(USD);
         exchangeRate.setTarget(EUR);
         exchangeRate.setRatio(new BigDecimal("0.8"));
+        em.persist(exchangeRate);
 
 
         user = new User();
@@ -210,7 +211,17 @@ public class StatisticsProviderImplTest {
     public void testGetStatisticsByDateRange() throws Exception {
 
         System.out.println(LocalDate.MIN.getYear());
+        System.out.println("STATISTICS\n\n");
         Statistics statistics = statisticsProvider.getStatisticsByDateRange(LocalDate.of(LocalDate.MIN.getYear() , 1, 1), LocalDate.now());
+        System.out.println(statistics.getStartDate());
+        System.out.println(statistics.getEndDate());
+        System.out.println(statistics.getCurrencyCode());
+        System.out.println(statistics.getExpenses());
+        System.out.println(statistics.getTotalExpense());
+        System.out.println(statistics.getIncomes());
+        System.out.println(statistics.getTotalIncome());
+
+        statistics = statisticsProvider.getStatisticsByDateRange(LocalDate.of(1996 , 1, 1), LocalDate.now());
         System.out.println(statistics.getStartDate());
         System.out.println(statistics.getEndDate());
         System.out.println(statistics.getCurrencyCode());
