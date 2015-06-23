@@ -9,10 +9,17 @@ import com.github.perfin.service.api.StatisticsProvider;
 import com.github.perfin.service.api.UserManager;
 import com.github.perfin.service.dto.Statistics;
 
+import javax.annotation.security.PermitAll;
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -21,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Stateless
+@PermitAll
 public class StatisticsProviderImpl implements StatisticsProvider {
 
     @PersistenceContext
