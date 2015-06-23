@@ -17,7 +17,8 @@ public class TestWebArchiveHelper {
                         "com.github.perfin.service.rest",
                         "com.github.perfin.service.dto",
                         "com.github.perfin.model.util",
-                        "org.assertj.core");
+                        "org.assertj.core")
+                .addClass(AdminCaller.class);
 
         war.addAsLibraries(Maven.resolver().loadPomFromFile("pom.xml")
                 .resolve("org.mockito:mockito-all").withTransitivity().asFile());

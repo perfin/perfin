@@ -5,7 +5,7 @@ import com.github.perfin.service.api.CurrencyManager;
 import com.github.perfin.service.dto.PaginatedListWrapper;
 
 import javax.annotation.security.PermitAll;
-import javax.batch.runtime.BatchRuntime;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -16,7 +16,6 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 
 import java.util.List;
-import java.util.Properties;
 
 @Stateless
 @ApplicationPath("/service")
@@ -52,6 +51,7 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
 
     @POST
     @Override
+    @RolesAllowed("admin")
     public Currency saveCurrency(Currency currency) {
         if (currency == null) {
             throw new IllegalArgumentException("Null instance can't be saved");
@@ -70,6 +70,7 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
     @DELETE
     @Path("{id}")
     @Override
+    @RolesAllowed("admin")
     public void deleteCurrency(@PathParam("id") Long id) {
         Currency currency = em.find(Currency.class, id);
 

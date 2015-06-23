@@ -2,6 +2,7 @@ package com.github.perfin.service.rest;
 
 import com.github.perfin.model.entity.Currency;
 import com.github.perfin.model.entity.ExchangeRate;
+import com.github.perfin.service.AdminCaller;
 import com.github.perfin.service.TestWebArchiveHelper;
 import com.github.perfin.service.api.CurrencyManager;
 
@@ -13,11 +14,10 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import javax.inject.Inject;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 @RunWith(Arquillian.class)
@@ -29,6 +29,9 @@ public class ExchangeRatesProviderTest {
     
     @Inject
     private CurrencyManager currencyManager;
+    
+    @Inject
+    private AdminCaller adminCaller;
 
     @Deployment
     public static Archive<?> getDeployment() {
@@ -58,8 +61,20 @@ public class ExchangeRatesProviderTest {
     }
     
     @Test
-    public void testSaveGetAll() {
+    public void testSaveGetAll() throws Exception {
+
+        adminCaller.call(new Callable<Void>() {
+
+            @Override
+            public Void call() throws Exception {
+                saveGetAllCallable();
+                return null;
+            }
+        });
         
+    }
+
+    private void saveGetAllCallable() {
         Currency eur = new Currency();
         eur.setCode("EUR");
         eur = currencyManager.saveCurrency(eur);
@@ -77,7 +92,6 @@ public class ExchangeRatesProviderTest {
         
         Assertions.assertThat(er.getId()).isNotNull();
         Assertions.assertThat(rates.getStoredRates().size()).isEqualTo(1);
-        
     }
 
 }
