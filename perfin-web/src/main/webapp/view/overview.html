@@ -1,6 +1,6 @@
-<div ng-controller="statisticsController">
-  <h2>Statistics</h2>
+<h2>Overview</h2>
 
+<div class="overview" ng-controller="statisticsController">
   <h3>Incomes</h3>
   <table class="statistics">
     <thead>
@@ -22,7 +22,9 @@
       </tr>
     </tfoot>
   </table>
+</div>
 
+<div class="overview" ng-controller="statisticsController">
   <h3>Expenses</h3>
   <table class="statistics">
     <thead>
@@ -46,7 +48,7 @@
   </table>
 </div>
 
-<div ng-controller="balanceController">
+<div class="overview" ng-controller="balanceController">
   <h3>Balances</h3>
   <table class="statistics">
     <thead>

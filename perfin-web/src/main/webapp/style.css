@@ -89,3 +89,8 @@ table.statistics th, table.statistics td {
     padding: 5px 10px;
     border: 1px solid #ddd;
 }
+
+div.overview {
+    float: left;
+    margin-left: 100px;
+}
