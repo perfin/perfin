@@ -55,4 +55,14 @@ public class CurrencyConverterImpl implements CurrencyConverter {
         return amount.multiply(ratio);
     }
 
+    void setEm(EntityManager em) {
+        this.em = em;
+    }
+
+    void setExchangeRatesProvider(ExchangeRatesProvider exchangeRatesProvider) {
+        this.exchangeRatesProvider = exchangeRatesProvider;
+    }
+    
+    
+
 }
