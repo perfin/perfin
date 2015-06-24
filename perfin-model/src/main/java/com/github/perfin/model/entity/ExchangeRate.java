@@ -1,5 +1,7 @@
 package com.github.perfin.model.entity;
 
+import com.github.perfin.model.util.LocalDatePersistenceConverter;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -29,6 +31,7 @@ public class ExchangeRate implements Serializable {
     @NotNull(message = "ratio can't be null")
     private BigDecimal ratio;
 
+    @Convert(converter = LocalDatePersistenceConverter.class)
     @Column(nullable = false)
     @NotNull(message = "date can't be null")
     private LocalDate date;
