@@ -9,13 +9,19 @@ app.factory('statisticsService', function ($resource) {
 });
 
 app.controller('balanceController', function ($scope, ATP) {
-    $scope.resources = ATP.send('BALANCES');
+    setResources = function(resources) {
+        $scope.resources = resources;
+    };
+
+    ATP.send('BALANCES', setResources);
 });
 
 app.factory('ATP', function ($websocket) {
     // Open a WebSocket connection
     var ws = $websocket("ws://" + document.location.host + document.location.pathname + "balances");
     var atp = [];
+
+    var setResources;
 
     ws.onMessage(function (event) {
         console.log('message: ', event.data);
@@ -26,7 +32,7 @@ app.factory('ATP', function ($websocket) {
             console.log(e)
         }
 
-        console.log(response)
+        setResources(response);
     });
     ws.onError(function (event) {
         console.log('connection Error', event);
@@ -43,8 +49,9 @@ app.factory('ATP', function ($websocket) {
         status: function () {
             return ws.readyState;
         },
-        send: function (message) {
+        send: function (message, resources) {
             if (angular.isString(message)) {
+                setResources = resources;
                 ws.send(message);
             }
             else if (angular.isObject(message)) {
