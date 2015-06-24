@@ -49,3 +49,16 @@ app.controller('alertMessagesController', function ($scope) {
         $scope.alerts.splice(index, 1);
     };
 });
+
+app.controller('rolesController', function ($scope, $timeout, userService) {
+    userService.get({role : 'admin'}, function (data) {
+        $timeout(function () {
+            $scope.admin = data.admin;
+        }, 1000);
+    })
+});
+
+// Service that provides transactions operations
+app.factory('userService', function ($resource) {
+    return $resource('service/users/');
+});

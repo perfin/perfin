@@ -28,12 +28,12 @@
   <body>
     <h1>PerFin</h1>
 
-    <ul class="menu">
+    <ul class="menu" ng-controller="rolesController">
       <li><a href="#/overview">Overview</a></li>
       <li><a href="#/transaction">Transactions</a></li>
       <li><a href="#/category">Categories</a></li>
       <li><a href="#/resource">Resources</a></li>
-      <li><a href="#/currency">Currencies</a></li>
+      <li ng-show="admin"><a href="#/currency">Currencies</a></li>
       <li><a href="logout">Logout</a></li>
     </ul>
 

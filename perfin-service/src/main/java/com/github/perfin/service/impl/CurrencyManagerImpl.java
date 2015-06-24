@@ -34,9 +34,6 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
     @PersistenceContext
     private EntityManager em;
 
-    @Resource
-    private SessionContext sessionContext;
-
     @Inject
     private UserManager userManager;
 
@@ -124,7 +121,7 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
         PaginatedListWrapper<Currency> paginatedListWrapper = new PaginatedListWrapper<>();
 
         if (all) {
-            if (sessionContext.isCallerInRole("standard")) {
+            if (userManager.isInRole("standard").get("standard")) {
                 List<Currency> currencies = new ArrayList<>();
                 currencies.add(userManager.getCurrentUser().getDefaultCurrency());
                 paginatedListWrapper.setList(currencies);

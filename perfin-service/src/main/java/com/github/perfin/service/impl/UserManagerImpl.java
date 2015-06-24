@@ -4,21 +4,20 @@ import com.github.perfin.model.entity.Currency;
 import com.github.perfin.model.entity.User;
 import com.github.perfin.service.api.UserManager;
 
+import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 @Stateless
 @ApplicationPath("/service")
@@ -33,6 +32,9 @@ public class UserManagerImpl implements UserManager {
 
     @Inject
     private Principal principal;
+
+    @Resource
+    private SessionContext sessionContext;
 
     @Override
     @POST
@@ -55,6 +57,14 @@ public class UserManagerImpl implements UserManager {
         Query query = em.createNamedQuery("getUserByUserName");
         query.setParameter("userName", userName);
         return (User) query.getSingleResult();
+    }
+
+    @GET
+    @Override
+    public Map<String, Boolean> isInRole(@QueryParam("role") String role) {
+        Map<String, Boolean> isInRole = new HashMap<>();
+        isInRole.put(role, sessionContext.isCallerInRole(role));
+        return isInRole;
     }
 
     void setEm(EntityManager em) {
