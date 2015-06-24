@@ -2,12 +2,16 @@ package com.github.perfin.service.impl;
 
 import com.github.perfin.model.entity.Currency;
 import com.github.perfin.service.api.CurrencyManager;
+import com.github.perfin.service.api.UserManager;
 import com.github.perfin.service.dto.PaginatedListWrapper;
 
+import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
 import javax.batch.runtime.BatchRuntime;
 import javax.ejb.EJBTransactionRolledbackException;
+import javax.ejb.SessionContext;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
@@ -15,6 +19,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -28,6 +33,12 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
 
     @PersistenceContext
     private EntityManager em;
+
+    @Resource
+    private SessionContext sessionContext;
+
+    @Inject
+    private UserManager userManager;
 
     private Currency createCurrency(String code, String name) {
         Currency currency = new Currency();
@@ -113,6 +124,12 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
         PaginatedListWrapper<Currency> paginatedListWrapper = new PaginatedListWrapper<>();
 
         if (all) {
+            if (sessionContext.isCallerInRole("standard")) {
+                List<Currency> currencies = new ArrayList<>();
+                currencies.add(userManager.getCurrentUser().getDefaultCurrency());
+                paginatedListWrapper.setList(currencies);
+                return paginatedListWrapper;
+            }
             Query query = em.createQuery("SELECT c FROM Currency c", Currency.class);
             paginatedListWrapper.setList(query.getResultList());
             return paginatedListWrapper;
