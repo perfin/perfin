@@ -8,3 +8,5 @@
 ./bin/add-user.sh premiumuser User1234. -a -g premium
 ./bin/add-user.sh standarduser User1234. -a -g standard
 
+# management user
+./bin/add-user.sh management User1234.

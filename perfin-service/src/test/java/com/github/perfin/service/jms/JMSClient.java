@@ -20,7 +20,7 @@ public class JMSClient {
     private static final String DEFAULT_DESTINATION = "jms/ConverterQueue";
     private static final String DEFAULT_DESTINATION_RESPONSE = "jms/ConverterQueueResponse";
     private static final String DEFAULT_USERNAME = "JMSUser";
-    private static final String DEFAULT_PASSWORD = "user1234;";
+    private static final String DEFAULT_PASSWORD = "User1234.";
     private static final String INITIAL_CONTEXT_FACTORY = "org.jboss.naming.remote.client.InitialContextFactory";
     private static final String PROVIDER_URL = "http-remoting://127.0.0.1:8080";
 
