@@ -1,6 +1,7 @@
 package com.github.perfin.service.impl;
 
 import com.github.perfin.model.entity.Category;
+import com.github.perfin.model.entity.Currency;
 import com.github.perfin.model.entity.Resource;
 import com.github.perfin.model.entity.Transaction;
 import com.github.perfin.service.api.ResourceManager;
@@ -16,6 +17,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -38,8 +40,13 @@ public class TransactionManagerImpl implements TransactionManager {
     private UserManager userManager;
 
     private Transaction createTransaction(Transaction transaction) {
+        Resource resource = resourceManager.getResource(transaction.getResource().getId());
+        BigDecimal resBalance = resource.getBalance();
+        resource.setBalance(resBalance.add(transaction.getAmount()));
+        resourceManager.saveResource(resource);
+        
         em.persist(transaction);
-
+        
         return transaction;
     }
 
