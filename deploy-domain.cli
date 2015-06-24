@@ -1,0 +1,3 @@
+batch
+deploy /home/mmacik/School/JBoss_Java/perfin/perfin-web/target/perfin.war --server-groups=other-server-group
+run-batch

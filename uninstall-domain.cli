@@ -1,0 +1,29 @@
+# stop the preconfigured server for the domain
+batch
+# first stop the domain servers, block until the server is down
+/host=master/server-config=server-one:stop(blocking=true)
+/host=master/server-config=server-two:stop(blocking=true)
+
+# remove the default server configuration and server-groups
+/host=master/server-config=server-one:remove
+/host=master/server-config=server-two:remove
+
+# add default servers
+/host=master/server-config=server-one:add(group=main-server-group)
+/host=master/server-config=server-two:add(group=main-server-group,auto-start=true,socket-binding-port-offset=150)
+/host=master/server-config=server-three:add(group=other-server-group,auto-start=false,socket-binding-port-offset=250)
+
+/server-group=other-server-group/jvm=default/:write-attribute(name=max-heap-size,value=512m)
+
+/profile=full-ha/subsystem=messaging/hornetq-server=default/security-setting=#/role=premium/:remove
+
+/profile=full-ha/subsystem=messaging/hornetq-server=default/security-setting=#/role=admin/:remove
+
+/profile=full-ha/subsystem=messaging/hornetq-server=default/security-setting=#/role=guest/:add(delete-non-durable-queue=true,create-non-durable-queue=true,send=true,consume=true)
+
+/profile=full-ha/subsystem=messaging/hornetq-server=default/jms-queue=perfinQueueRequest/:remove
+
+/profile=full-ha/subsystem=messaging/hornetq-server=default/jms-queue=perfinQueueResponse/:remove
+
+
+run-batch

@@ -1,0 +1,15 @@
+# stop the preconfigured server for the domain
+batch
+
+/subsystem=messaging/hornetq-server=default/security-setting=#/role=premium/:remove
+
+/subsystem=messaging/hornetq-server=default/security-setting=#/role=admin/:remove
+
+/subsystem=messaging/hornetq-server=default/security-setting=#/role=guest/:add(delete-non-durable-queue=true,create-non-durable-queue=true,send=true,consume=true)
+
+/subsystem=messaging/hornetq-server=default/jms-queue=perfinQueueRequest/:remove
+
+/subsystem=messaging/hornetq-server=default/jms-queue=perfinQueueResponse/:remove
+
+
+run-batch

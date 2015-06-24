@@ -1,0 +1,3 @@
+batch
+undeploy perfin.war
+run-batch

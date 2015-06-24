@@ -1,0 +1,17 @@
+# stop the preconfigured server for the domain
+batch
+
+
+
+/subsystem=messaging/hornetq-server=default/security-setting=#/role=guest/:remove
+
+/subsystem=messaging/hornetq-server=default/security-setting=#/role=premium/:add(delete-non-durable-queue=true,create-non-durable-queue=true,send=true,consume=true)
+
+/subsystem=messaging/hornetq-server=default/security-setting=#/role=admin/:add(delete-non-durable-queue=true,create-non-durable-queue=true,send=true,consume=true)
+
+/subsystem=messaging/hornetq-server=default/jms-queue=perfinQueueRequest/:add(entries=["jms/ConverterQueue","java:jboss/exported/jms/ConverterQueue"])
+
+/subsystem=messaging/hornetq-server=default/jms-queue=perfinQueueResponse/:add(entries=["jms/ConverterQueueResponse","java:jboss/exported/jms/ConverterQueueResponse"])
+
+
+run-batch

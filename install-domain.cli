@@ -1,0 +1,34 @@
+# stop the preconfigured server for the domain
+batch
+# first stop the default servers, block until the server is down
+/host=master/server-config=server-one:stop(blocking=true)
+/host=master/server-config=server-two:stop(blocking=true)
+# remove the default server configuration and server-groups
+/host=master/server-config=server-one:remove
+/host=master/server-config=server-two:remove
+/host=master/server-config=server-three:remove
+
+/server-group=other-server-group/jvm=default/:write-attribute(name=max-heap-size,value=768m)
+
+/host=master/server-config=server-one:add(auto-start=true, group=other-server-group, socket-binding-port-offset=250)
+
+/host=master/server-config=server-two:add(auto-start=true, group=other-server-group, socket-binding-port-offset=350)
+
+
+/profile=full-ha/subsystem=messaging/hornetq-server=default/security-setting=#/role=guest/:remove
+
+/profile=full-ha/subsystem=messaging/hornetq-server=default/security-setting=#/role=premium/:add(delete-non-durable-queue=true,create-non-durable-queue=true,send=true,consume=true)
+
+/profile=full-ha/subsystem=messaging/hornetq-server=default/security-setting=#/role=admin/:add(delete-non-durable-queue=true,create-non-durable-queue=true,send=true,consume=true)
+
+/profile=full-ha/subsystem=messaging/hornetq-server=default/jms-queue=perfinQueueRequest/:add(entries=["jms/ConverterQueue","java:jboss/exported/jms/ConverterQueue"])
+
+/profile=full-ha/subsystem=messaging/hornetq-server=default/jms-queue=perfinQueueResponse/:add(entries=["jms/ConverterQueueResponse","java:jboss/exported/jms/ConverterQueueResponse"])
+
+
+run-batch
+
+:restart-servers
+
+/host=master/server-config=server-one:start
+/host=master/server-config=server-two:start
