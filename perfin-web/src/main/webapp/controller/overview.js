@@ -18,7 +18,7 @@ app.controller('balanceController', function ($scope, ATP) {
 
 app.factory('ATP', function ($websocket) {
     // Open a WebSocket connection
-    var ws = $websocket("ws://" + document.location.host + document.location.pathname + "balances");
+    var ws = $websocket("ws://" + document.location.host + "/perfin/balances");
     var atp = [];
 
     var setResources;
