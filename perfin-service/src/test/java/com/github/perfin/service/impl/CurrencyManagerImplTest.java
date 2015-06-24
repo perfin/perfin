@@ -11,6 +11,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -53,6 +54,7 @@ public class CurrencyManagerImplTest {
         }
     }
 
+    @Ignore
     @Test
     public void testSaveGetDelete() {
         Currency currencyOne = new Currency();
@@ -73,6 +75,7 @@ public class CurrencyManagerImplTest {
         assertThat(wrapper.getList().get(0)).isEqualTo(currencyTwo);
     }
 
+    @Ignore
     @Test
     public void testUpdate() {
         Currency currency = new Currency();
@@ -88,6 +91,7 @@ public class CurrencyManagerImplTest {
         assertThat(wrapper.getList().get(0)).isEqualTo(updated);
     }
 
+    @Ignore
     @Test
     public void testInvalidOperations() {
         // invalid code
@@ -128,6 +132,7 @@ public class CurrencyManagerImplTest {
         }
     }
 
+    @Ignore
     @Test
     @RunAsClient
     public void testRest(@ArquillianResource URL base) throws URISyntaxException {

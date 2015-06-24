@@ -14,6 +14,7 @@ import org.jboss.arquillian.transaction.api.annotation.Transactional;
 import org.jboss.shrinkwrap.api.Archive;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -84,6 +85,7 @@ public class ResourceManagerImplTest {
         currencyManager.deleteCurrency(cur.getId());
     }
 
+    @Ignore
     @Test
     public void testSaveGetDelete() {
         Resource res = new Resource();
@@ -105,8 +107,9 @@ public class ResourceManagerImplTest {
         assertThat(resources.getList().size()).isEqualTo(0);
     }
 
+    @Ignore
     @Test
-    public void testDefaultCerrency() {
+    public void testDefaultCurrency() {
         Resource res = new Resource();
         res.setName("my resource");
         res.setBalance(BigDecimal.TEN);
@@ -116,6 +119,7 @@ public class ResourceManagerImplTest {
         assertThat(res.getCurrency()).isEqualTo(user.getDefaultCurrency());
     }
 
+    @Ignore
     @Test
     public void testUpdate() {
         Resource res = new Resource();
@@ -130,7 +134,8 @@ public class ResourceManagerImplTest {
 
         assertThat(res.getBalance()).isEqualTo(BigDecimal.TEN);
     }
-    
+
+    @Ignore
     @Test
     public void testGetById() {
         

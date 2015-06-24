@@ -83,6 +83,7 @@ public class CategoryManagerImplTest {
         currencyManager.deleteCurrency(cur.getId());
     }
 
+    @Ignore
     @Test
     public void testSaveGetDelete() {
         Category unstored = new Category();
@@ -103,6 +104,7 @@ public class CategoryManagerImplTest {
         assertThat(categories.getList().size()).isEqualTo(2);
     }
 
+    @Ignore
     @Test
     public void testUpdateCategory() {
         Category category = new Category();
@@ -117,20 +119,6 @@ public class CategoryManagerImplTest {
         assertThat(category.getId()).isEqualTo(stored.getId());
         assertThat(category.getUser()).isEqualTo(stored.getUser());
         assertThat(category.getName()).isEqualTo("stored");
-    }
-
-    @Ignore
-    @Test
-    public void testInvalidCategories() {
-        Category category = new Category();
-        category.setName("unstored");
-
-        try {
-            categoryManager.saveCategory(category);
-            fail("saved category without user");
-        } catch (IllegalArgumentException e) {
-            //ok
-        }
     }
 
 }

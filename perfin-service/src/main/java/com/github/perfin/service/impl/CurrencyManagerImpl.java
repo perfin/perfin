@@ -7,6 +7,7 @@ import com.github.perfin.service.dto.PaginatedListWrapper;
 
 import javax.annotation.Resource;
 import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.batch.runtime.BatchRuntime;
 import javax.ejb.EJBTransactionRolledbackException;
 import javax.ejb.SessionContext;
@@ -28,7 +29,6 @@ import java.util.Properties;
 @Path("currencies")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-@PermitAll
 public class CurrencyManagerImpl extends Application implements CurrencyManager {
 
     @PersistenceContext
@@ -58,6 +58,7 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
         return currency;
     }
 
+    @RolesAllowed("admin")
     @POST
     @Override
     public Currency saveCurrency(Currency currency) {
@@ -75,6 +76,7 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
         }
     }
 
+    @RolesAllowed("admin")
     @DELETE
     @Path("{id}")
     @Override
@@ -84,6 +86,7 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
         em.remove(currency);
     }
 
+    @PermitAll
     @GET
     @Path("{id}")
     @Override
@@ -111,6 +114,7 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
         return wrapper;
     }
 
+    @PermitAll
     @GET
     @Override
     public PaginatedListWrapper<Currency> getCurrencies(
@@ -139,6 +143,7 @@ public class CurrencyManagerImpl extends Application implements CurrencyManager 
         return findCurrencies(paginatedListWrapper);
     }
 
+    @PermitAll
     @Override
     public List<Currency> getCurrencies() {
         Query query = em.createNamedQuery("getAllCurrencies");

@@ -59,7 +59,8 @@ public class ExchangeRatesProviderTest {
         BigDecimal ratio = rates.getLatestRatio("EUR", "EUR").get();
         Assertions.assertThat(ratio).isEqualTo(BigDecimal.ONE);
     }
-    
+
+    @Ignore
     @Test
     public void testSaveGetAll() {
         
