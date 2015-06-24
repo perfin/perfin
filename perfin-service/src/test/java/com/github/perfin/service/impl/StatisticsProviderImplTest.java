@@ -203,7 +203,7 @@ public class StatisticsProviderImplTest {
 
         System.out.println(LocalDate.MIN.getYear());
         System.out.println("STATISTICS\n\n");
-        Statistics statistics = statisticsProvider.getStatisticsByDateRange(LocalDate.of(LocalDate.MIN.getYear() , 1, 1), now);
+        Statistics statistics = statisticsProvider.getStatisticsByDateRange(LocalDate.of(1970, 1, 1), now);
         System.out.println(statistics.getStartDate());
         System.out.println(statistics.getEndDate());
         System.out.println(statistics.getCurrencyCode());
@@ -212,7 +212,7 @@ public class StatisticsProviderImplTest {
         System.out.println(statistics.getIncomes());
         System.out.println(statistics.getTotalIncome());
 
-        assertThat(statistics.getStartDate()).isEqualTo(LocalDate.of(LocalDate.MIN.getYear(), 1, 1).toString());
+        assertThat(statistics.getStartDate()).isEqualTo(LocalDate.of(1970, 1, 1).toString());
         assertThat(statistics.getEndDate()).isEqualTo(now.toString());
         assertThat(statistics.getCurrencyCode()).isEqualTo("EUR");
         assertThat(statistics.getExpenses().size()).isEqualTo(2);
