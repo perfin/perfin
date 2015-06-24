@@ -33,6 +33,10 @@ public class ExchangeRatesProvider {
     }
 
     private BigDecimal getRate(String from, String to) {
+        if(from.equals(to)) {
+            return BigDecimal.ONE;
+        }
+        
         Client client = ClientBuilder.newClient();
         WebTarget target = client.target("http://api.fixer.io/latest?base=" + from);
         JsonObject response = target.request(MediaType.APPLICATION_JSON).get(JsonObject.class);

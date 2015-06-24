@@ -55,6 +55,9 @@ public class ExchangeRatesProviderTest {
 
         BigDecimal czk = rates.getLatestRatio("EUR", "CZK").get();
         Assertions.assertThat(czk).isBetween(BigDecimal.valueOf(25), BigDecimal.valueOf(30));
+        
+        BigDecimal ratio = rates.getLatestRatio("EUR", "EUR").get();
+        Assertions.assertThat(ratio).isEqualTo(BigDecimal.ONE);
     }
     
     @Test
