@@ -1,19 +1,16 @@
 package com.github.perfin.service.impl;
 
 import com.github.perfin.model.entity.*;
+import com.github.perfin.service.TestWebArchiveHelper;
 import com.github.perfin.service.api.CurrencyConverter;
-import com.github.perfin.service.api.StatisticsProvider;
 import com.github.perfin.service.api.UserManager;
 import com.github.perfin.service.dto.Statistics;
-import com.github.perfin.service.rest.ExchangeRatesProvider;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.transaction.api.annotation.Transactional;
 import org.jboss.shrinkwrap.api.Archive;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
